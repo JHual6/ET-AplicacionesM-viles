@@ -29,9 +29,9 @@
       <ion-col size="4">{{ asignatura.siglas_asignatura }}</ion-col>
       <ion-col size="2">{{ asignatura.seccion_asignatura }}</ion-col>
       <ion-col size="2">
-        <ion-button size="small" (click)="editarAsignatura(asignatura)">
-          <ion-icon name="build-outline"></ion-icon>
-        </ion-button>
+        <ion-button size="small" (click)="agregarEstudiantes(asignatura)">
+          <ion-icon name="person-add-outline"></ion-icon>
+        </ion-button>        
         <ion-button color="danger" size="small" (click)="eliminarAsignatura(asignatura)">
           <ion-icon name="trash-outline"></ion-icon>
         </ion-button>
