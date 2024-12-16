@@ -1,0 +1,28 @@
+<ion-content class="fondo">
+  <div class="header">
+    <ion-title class="titulo">Recuperar contraseña</ion-title>
+    <p class="subtitulo">Ingrese su usuario para restablecer su contraseña</p>
+  </div>
+
+  <form>
+    <div class="ion-padding">
+      <ion-item>
+        <ion-input [(ngModel)]="username" name="username" maxlength="25" minlength="6" required placeholder="Usuario"></ion-input>
+        <ion-icon style="color: #F5F5DC;" name="person-outline"></ion-icon>
+      </ion-item>
+      <div>
+        <a class="inicio" [routerLink]="['/ingreso']">¿Volver a la pagina de inicio?</a>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" style="color: red; margin-top: 10px; text-align: center;">
+      {{ errorMessage }}
+    </div>
+
+    <ion-fab (click)="resetPassword()" vertical="bottom" horizontal="end" style="margin-bottom:30px">
+      <ion-fab-button class="boton">
+        <ion-icon name="chevron-forward"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </form>
+</ion-content>

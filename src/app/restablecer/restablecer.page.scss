@@ -1,0 +1,37 @@
+ion-content.fondo {
+    background-image: url('../../assets/img/fondoalumno.png');
+    background-size: cover;
+    background-position: center;
+    --background: none;
+}
+.header{
+    margin-top: 140px;
+    margin-bottom: 40px;
+    text-align: center;
+    .titulo{
+        color: #F5F5DC;
+        font-size: 30px;
+        font-weight: bold;
+    }
+    .subtitulo{
+        color: #bcbca9;
+        font-size: 16px;
+        font-weight: 300;
+    }
+}
+ion-item{
+    --background: #74199b;
+    border: 1px solid #F5F5DC ;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    color: #F5F5DC;
+}
+.inicio{
+    color: #FFFACD;
+    font-size: 14px;
+}
+.boton{
+    --background: none;
+    background-color: #74199b;
+    border-radius: 50%;
+}

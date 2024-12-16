@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="titulo">Asignatura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="fondoAsignatura">
+  <div *ngIf="asignatura; else loading" class="asignatura-container">
+    <h1 
+    *ngIf="asignatura.color_asignatura" 
+    [ngStyle]="{
+      'background-image': 'linear-gradient(to right, #' + asignatura.color_asignatura + ', #' + asignatura.color_seccion_asignatura + ')',
+      color: getTextColor(asignatura.color_asignatura)
+    }">
+    {{ asignatura.nombre_asignatura }}
+    </h1>
+  
+    <p>Asistencia:</p>
+    <div class="spinner-wrapper">
+      <mat-progress-spinner 
+        class="custom-spinner" 
+        mode="determinate" 
+        [value]="porcentajeAsistencia">
+      </mat-progress-spinner>
+      <div class="spinner-text">{{ porcentajeAsistencia }}%</div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-container">
+      <mat-progress-spinner
+        class="custom-spinner"
+        mode="indeterminate"
+        diameter="50">
+      </mat-progress-spinner>
+      <p>Cargando datos...</p>
+    </div>
+  </ng-template>
+
+  <div class="leer-qr">
+    <h4>Escanear QR:</h4>
+    <button mat-fab extended class="boton-qr" (click)="escanearQR()">
+      <mat-icon style="color: #ffffff;">qr_code</mat-icon>
+    </button>
+  </div>
+</ion-content>

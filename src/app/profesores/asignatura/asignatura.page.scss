@@ -1,0 +1,93 @@
+ion-toolbar {
+    --background: rgb(120, 112, 124) !important;
+}
+.bienvenida{
+    margin-top: 30px;
+    text-align: center;
+    color: #F5F5DC;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+.titulo{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+.fondoAsignatura {
+    background-size: cover;
+    background-position: center;
+    --background: none;
+    background-image: url('../../../assets/img/fondoprofesor.png');
+}
+.spinner-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.spinner-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-spinner {
+    width: 100px;  
+    height: 100px;
+}
+
+.spinner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    h1{
+        font-weight: bold;
+        font-size: 2.2rem;
+        margin: 40px 0 20px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); 
+        padding: 10px 20px;
+        color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+        text-align: center;
+    }
+}
+mat-progress-spinner{
+    width: 200px !important;
+    height: 200px !important;
+}
+.qr-generator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    ion-input, ion-button {
+        width: 80%;
+        margin-top: 10px;
+      }
+}
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.qr-code-container img {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 2rem;
+}
+.boton-generar-qr{
+    color: white;
+    --background: #058d00;
+}

@@ -1,0 +1,161 @@
+ion-toolbar {
+    --background: rgb(120, 112, 124) !important; 
+}
+.titulo{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+.fondo {
+    background-size: cover;
+    background-position: center;
+    --background: none;
+}
+/* Fondos específicos por rol */
+.fondo-estudiante {
+    background-image: url('../../assets/img/fondoalumno.png');
+}
+.fondo-profesor {
+    background-image: url('../../assets//img/fondoprofesor.png');
+}
+.fondo-administrador {
+    background-image: url('../../assets/img/fondoadmin.png');
+}
+
+.bienvenida{
+    margin-top: 30px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+.nombre{
+    color: #dccaca;
+    font-size: 30px;
+    font-weight: bold;
+}
+.spinner-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%; 
+  text-align: center;
+}
+.spinner-container h5{
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+.spinner-container p{
+    color: #ffffff;
+    font-size: 14px;
+}
+.mat-icon{
+    font-size: 60px;
+    overflow: visible;
+    width: 100px;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    h4{
+        color: #ffffff;
+    }
+}
+.boton-qr{
+    background: none;
+}   
+.boton-container {
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+    margin-top: 20px; 
+    margin-bottom: 40px; 
+    margin-top: 40px;
+}
+
+.boton-administrar {
+    --background: black !important;
+    --color: white !important;
+    width: 90% !important;
+}
+::ng-deep ion-button.boton-asignatura {
+    --background: none;
+    --color: #ffffff; /* Cambiar el color del texto */
+    padding: 0;
+}
+.rol-mensaje-bienv{
+    margin-top: 2rem;
+}
+.estudiantes-seccion{
+    text-align: center;
+    align-content: center;
+    align-items: center;
+    align-self: center;
+}
+.nombre_asignatura{
+    margin-bottom: 2rem;
+}
+.asignatura-card{
+    margin-bottom: 2rem;
+}
+.spinner-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.spinner-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-spinner {
+    width: 100px;  
+    height: 100px;
+}
+
+.spinner-text {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    h1{
+        font-weight: bold;
+        font-size: 2.2rem;
+        margin: 40px 0 20px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); 
+        padding: 10px 20px;
+        color: #fff;
+        background: linear-gradient(to right, #6d008b, #000000); 
+        border: 2px solid #6d008b;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+        text-align: center;
+    }
+}
+mat-progress-spinner{
+    width: 200px !important;
+    height: 200px !important;
+}

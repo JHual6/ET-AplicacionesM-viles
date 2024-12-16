@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96844400781",
+    "project_id": "registrapp-notificaciones",
+    "storage_bucket": "registrapp-notificaciones.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96844400781:android:4e5f2fe8c7207ea3cafac4",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFaEHffl5tyWY0scv_WXjlfek9yV2PSpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

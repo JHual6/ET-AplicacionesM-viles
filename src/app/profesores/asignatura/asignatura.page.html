@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalles de la Asignatura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="fondoAsignatura">
+  <div *ngIf="asignatura; else loading" class="spinner-grid">
+    <div class="spinner-container">
+      <h1 [ngStyle]="{
+        'background-image': 'linear-gradient(to right, #' + asignatura.color_asignatura + ', #' + asignatura.color_seccion_asignatura + ')',
+        color: getTextColor(asignatura.color_asignatura)
+      }">{{ asignatura.nombre_asignatura }}</h1> <!-- Nombre de la asignatura cargado dinámicamente -->
+      <p>Asistencia del curso:</p>
+      <div class="spinner-wrapper">
+        <mat-progress-spinner class="custom-spinner" mode="determinate" [value]="porcentajeAsistencia"></mat-progress-spinner>
+        <div class="spinner-text">{{ porcentajeAsistencia.toFixed(2) }}%</div> <!-- Porcentaje de asistencia calculado -->
+      </div>    
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-container">
+      <mat-progress-spinner
+        class="custom-spinner"
+        mode="indeterminate"
+        diameter="50"
+        [value]="80"
+      ></mat-progress-spinner>
+      <p>Cargando datos...</p>
+    </div>
+  </ng-template>
+
+  <!-- Generación del QR -->
+  <div class="qr-generator">
+    <ion-input [(ngModel)]="fechaClase" type="date" placeholder="Selecciona la fecha"></ion-input>
+    <ion-button class="boton-generar-qr" expand="full" (click)="generateQrCode()">
+      Generar QR
+    </ion-button>
+  </div>
+
+  <!-- Mostrar el QR generado -->
+  <div *ngIf="codigoQrClase" class="qr-code-container">
+    <img [src]="codigoQrClase" alt="Código QR" />
+  </div>
+
+</ion-content>

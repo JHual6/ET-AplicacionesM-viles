@@ -1,0 +1,48 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="titulo" style="color: #F8B415;">
+      Duoc<b style="color: #001B35;">UC</b>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="fondo-asignaturas">
+  <div class="asignaturas-titulo">
+    <label>Asignaturas</label>
+  </div>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Asignaturas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4"><strong>Nombre</strong></ion-col>
+      <ion-col size="4"><strong>Siglas</strong></ion-col>
+      <ion-col size="2"><strong>Sección</strong></ion-col>
+      <ion-col size="2"><strong>Acciones</strong></ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let asignatura of asignaturas">
+      <ion-col size="4">{{ asignatura.nombre_asignatura }}</ion-col>
+      <ion-col size="4">{{ asignatura.siglas_asignatura }}</ion-col>
+      <ion-col size="2">{{ asignatura.seccion_asignatura }}</ion-col>
+      <ion-col size="2">
+        <ion-button size="small" (click)="editarAsignatura(asignatura)">
+          <ion-icon name="build-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" size="small" (click)="eliminarAsignatura(asignatura)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div>
+    <ion-button class="boton-agregar" expand="full" (click)="agregarAsignatura()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      Agregar Asignatura
+    </ion-button>
+  </div>
+</ion-content>
