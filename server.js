@@ -535,7 +535,7 @@ app.get('/clases/fecha/:fecha', (req, res) => {
   const fechaObj = moment(fechaClase).toDate();
 
   // Consulta para seleccionar solo id_clase, id_asignatura y fecha_clase
-  const query = 'SELECT id_clase, id_asignatura, fecha_clase FROM clases WHERE fecha_clase = ?';
+  const query = 'SELECT id_clase, id_asignatura, fecha_clase, codigoqr_clase FROM clases WHERE fecha_clase = ?';
 
   db.query(query, [fechaObj], (err, results) => {
     if (err) {
