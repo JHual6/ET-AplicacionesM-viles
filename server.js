@@ -472,6 +472,48 @@ app.delete('/deleteClases/:id_asignatura', (req, res) => {
       }
   });
 });
+// Ruta para obtener el id_clase de una asignatura específica con el código QR "Clase de inscripción"
+app.get('/getClaseInscripcion/:id_asignatura', (req, res) => {
+  const idAsignatura = req.params.id_asignatura;
+  const query = `SELECT id_clase FROM clases WHERE id_asignatura = ? AND codigoqr_clase = 'Clase de inscripción'`;
+
+  connection.query(query, [idAsignatura], (err, result) => {
+      if (err) {
+          console.error('Error al obtener la clase:', err);
+          res.status(500).send({ message: 'Error al obtener la clase', error: err });
+      } else {
+          if (result.length > 0) {
+              res.status(200).send(result); // Enviar el resultado
+          } else {
+              res.status(404).send({ message: 'No se encontró ninguna clase con el código QR "Clase de inscripción"' });
+          }
+      }
+  });
+});
+// Agregar un registro de asistencia
+app.post('/insertAsistencia', (req, res) => {
+  const { id_clase, id_estudiante, fecha_asistencia } = req.body;
+
+  if (!id_clase || !id_estudiante || !fecha_asistencia) {
+      return res.status(400).json({ error: 'Faltan parámetros requeridos' });
+  }
+
+  const query = `
+      INSERT INTO asistencia (id_clase, id_estudiante, asistencia, fecha_asistencia) 
+      VALUES (?, ?, 1, ?)
+  `;
+
+  connection.query(query, [id_clase, id_estudiante, fecha_asistencia], (err, results) => {
+      if (err) {
+          console.error('Error al insertar la asistencia:', err);
+          return res.status(500).json({ error: 'Error al insertar la asistencia' });
+      }
+      res.status(201).json({ message: 'Asistencia registrada exitosamente', results });
+  });
+});
+
+
+
 
 
 

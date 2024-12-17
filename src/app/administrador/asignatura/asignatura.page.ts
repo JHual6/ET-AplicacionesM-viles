@@ -99,7 +99,57 @@ export class AsignaturaPage implements OnInit {
   // Editar asignatura con alerta
   async agregarEstudiantes(asignatura: any) {
     console.log('Editar asignatura:', asignatura);
+  
+    // Obtener id_asignatura desde los datos de la asignatura
+    const id_asignatura = asignatura.id_asignatura;
+    console.log(`ID de la asignatura: ${id_asignatura}`);
+  
+    // Llamar al servicio para obtener el id_clase
+    this.databaseservice.getClaseInscripcion(id_asignatura).subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          // Guardar el id_clase en una variable
+          const id_clase = response[0].id_clase;
+          console.log(`ID de la clase de inscripción obtenida: ${id_clase}`);
+        
+          // Pedir entrada para el ID del estudiante
+          const id_estudiante = prompt("Ingrese el ID del estudiante:");
+        
+          if (id_estudiante) {
+            // Obtener la fecha del sistema en formato 'YYYY-MM-DD'
+            const fecha_asistencia = new Date().toISOString().slice(0, 10);
+          
+            // Llamar al método para insertar la asistencia
+            this.databaseservice.insertAsistencia(id_clase, parseInt(id_estudiante), fecha_asistencia).subscribe(
+              (response) => {
+                console.log('Asistencia registrada exitosamente:', response.message);
+              },
+              (error) => {
+                console.error('Error al registrar la asistencia:', error);
+              }
+            );
+          } else {
+            console.warn('ID del estudiante no proporcionado.');
+          }
+        } else {
+          console.warn('No se encontró ninguna clase de inscripción para la asignatura especificada.');
+        }
+      },
+      (error) => {
+        console.error('Error al obtener el ID de la clase de inscripción:', error);
+      }
+    );
   }
+  
+  // Método para procesar estudiantes (ejemplo de continuación)
+  procesarEstudiantes(asignatura: any, id_clase: number) {
+    console.log('Procesando estudiantes para la asignatura:', asignatura);
+    console.log('ID de la clase:', id_clase);
+  
+    // Aquí puedes implementar cualquier lógica adicional, como guardar estudiantes en la clase
+  }
+
+
   // Eliminar asignatura
   eliminarAsignatura(id_asignatura: number) {
     console.log(`ID recibido para eliminar: ${id_asignatura}`);
@@ -108,24 +158,21 @@ export class AsignaturaPage implements OnInit {
     this.databaseservice.deleteClasesAsociadas(id_asignatura).subscribe(
       () => {
         console.log('Clases asociadas eliminadas con éxito.');
-  
-        // Luego, elimina la asignatura
-        this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
-          (response) => {
-            console.log(response.message);
-            this.cargarAsignaturas(); // Actualizar vista
-          },
-          (error) => {
-            console.error('Error al eliminar la asignatura', error);
-          }
-        );
       },
       (error) => {
         console.error('Error al eliminar las clases asociadas', error);
       }
+      
     );
-  }
-  
-  
-  
+    // Luego, elimina la asignatura
+    this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
+      (response) => {
+        console.log(response.message);
+        this.cargarAsignaturas(); // Actualizar vista
+      },
+      (error) => {
+        console.error('Error al eliminar la asignatura', error);
+      }
+    );
+  }  
 }

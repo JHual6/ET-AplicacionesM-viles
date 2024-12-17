@@ -121,6 +121,15 @@ export class DatabaseService {
     console.log(`Eliminando clases asociadas con la asignatura ID: ${id_asignatura}`);
     return this.http.delete<any>(`${this.baseUrl}/deleteClases/${id_asignatura}`);
   }
+  getClaseInscripcion(id_asignatura: number) {
+    console.log(`Obteniendo ID de la clase de inscripción para la asignatura con ID: ${id_asignatura}`);
+    return this.http.get<any>(`${this.baseUrl}/getClaseInscripcion/${id_asignatura}`);
+  }
+  insertAsistencia(id_clase: number, id_estudiante: number, fecha_asistencia: string) {
+    console.log(`Insertando asistencia: Clase ID ${id_clase}, Estudiante ID ${id_estudiante}, Fecha ${fecha_asistencia}`);
+    const body = { id_clase, id_estudiante, fecha_asistencia };
+    return this.http.post<any>(`${this.baseUrl}/insertAsistencia`, body);
+  }
   
 }
 
