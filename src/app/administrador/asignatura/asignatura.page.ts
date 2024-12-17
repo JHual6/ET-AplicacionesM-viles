@@ -95,8 +95,6 @@ export class AsignaturaPage implements OnInit {
     await alert.present();
   }
   
-
-  // Editar asignatura con alerta
   async agregarEstudiantes(asignatura: any) {
     console.log('Editar asignatura:', asignatura);
   
@@ -106,31 +104,53 @@ export class AsignaturaPage implements OnInit {
   
     // Llamar al servicio para obtener el id_clase
     this.databaseservice.getClaseInscripcion(id_asignatura).subscribe(
-      (response) => {
+      async (response) => {
         if (response && response.length > 0) {
           // Guardar el id_clase en una variable
           const id_clase = response[0].id_clase;
           console.log(`ID de la clase de inscripción obtenida: ${id_clase}`);
-        
-          // Pedir entrada para el ID del estudiante
-          const id_estudiante = prompt("Ingrese el ID del estudiante:");
-        
-          if (id_estudiante) {
-            // Obtener la fecha del sistema en formato 'YYYY-MM-DD'
-            const fecha_asistencia = new Date().toISOString().slice(0, 10);
-          
-            // Llamar al método para insertar la asistencia
-            this.databaseservice.insertAsistencia(id_clase, parseInt(id_estudiante), fecha_asistencia).subscribe(
-              (response) => {
-                console.log('Asistencia registrada exitosamente:', response.message);
+  
+          // Mostrar alerta para ingresar el ID del estudiante
+          const alert = await this.alertController.create({
+            header: 'Ingresar ID del Estudiante',
+            inputs: [
+              { name: 'id_estudiante', type: 'number', placeholder: 'ID Estudiante' }
+            ],
+            buttons: [
+              {
+                text: 'Cancelar',
+                role: 'cancel',
               },
-              (error) => {
-                console.error('Error al registrar la asistencia:', error);
+              {
+                text: 'Guardar',
+                handler: (data) => {
+                  if (data.id_estudiante) {
+                    // Obtener la fecha del sistema en formato 'YYYY-MM-DD'
+                    const fecha_asistencia = new Date().toISOString().slice(0, 10);
+  
+                    // Llamar al método para insertar la asistencia
+                    this.databaseservice.insertAsistencia(id_clase, parseInt(data.id_estudiante), fecha_asistencia).subscribe(
+                      (response) => {
+                        console.log('Asistencia registrada exitosamente:', response.message);
+                        this.alertController.create({
+                          header: 'Éxito',
+                          message: 'Estudiante agregado correctamente.',
+                          buttons: ['OK'],
+                        }).then((alert) => alert.present());
+                      },
+                      (error) => {
+                        console.error('Error al registrar la asistencia:', error);
+                      }
+                    );
+                  } else {
+                    console.warn('ID del estudiante no proporcionado.');
+                  }
+                }
               }
-            );
-          } else {
-            console.warn('ID del estudiante no proporcionado.');
-          }
+            ]
+          });
+  
+          await alert.present();
         } else {
           console.warn('No se encontró ninguna clase de inscripción para la asignatura especificada.');
         }
@@ -140,15 +160,6 @@ export class AsignaturaPage implements OnInit {
       }
     );
   }
-  
-  // Método para procesar estudiantes (ejemplo de continuación)
-  procesarEstudiantes(asignatura: any, id_clase: number) {
-    console.log('Procesando estudiantes para la asignatura:', asignatura);
-    console.log('ID de la clase:', id_clase);
-  
-    // Aquí puedes implementar cualquier lógica adicional, como guardar estudiantes en la clase
-  }
-
 
   // Eliminar asignatura
   eliminarAsignatura(id_asignatura: number) {

@@ -506,7 +506,7 @@ app.post('/insertAsistencia', (req, res) => {
       VALUES (?, ?, 1, ?)
   `;
 
-  connection.query(query, [id_clase, id_estudiante, fecha_asistencia], (err, results) => {
+  db.query(query, [id_clase, id_estudiante, fecha_asistencia], (err, results) => {
       if (err) {
           console.error('Error al insertar la asistencia:', err);
           return res.status(500).json({ error: 'Error al insertar la asistencia' });
@@ -545,7 +545,7 @@ app.get('/clases/fecha/:fecha', (req, res) => {
   // Consulta para seleccionar solo id_clase, id_asignatura y fecha_clase
   const query = 'SELECT id_clase, id_asignatura, fecha_clase FROM clases WHERE fecha_clase = ?';
 
-  connection.query(query, [fechaObj], (err, results) => {
+  db.query(query, [fechaObj], (err, results) => {
     if (err) {
       console.error('Error en la consulta SQL:', err.sqlMessage || err);
       res.status(500).json({
