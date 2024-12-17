@@ -480,7 +480,7 @@ app.get('/getClaseInscripcion/:id_asignatura', (req, res) => {
   const idAsignatura = req.params.id_asignatura;
   const query = `SELECT id_clase FROM clases WHERE id_asignatura = ? AND codigoqr_clase = 'Clase de inscripción'`;
 
-  connection.query(query, [idAsignatura], (err, result) => {
+  db.query(query, [idAsignatura], (err, result) => {
       if (err) {
           console.error('Error al obtener la clase:', err);
           res.status(500).send({ message: 'Error al obtener la clase', error: err });
