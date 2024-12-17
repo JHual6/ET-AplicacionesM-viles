@@ -596,17 +596,27 @@ app.get('/clase/codigoqr', async (req, res) => {
 
     console.log('Parámetros recibidos:', { id_asignatura, fecha_clase });
 
+    // Validar que los parámetros existen
     if (!id_asignatura || !fecha_clase) {
       return res.status(400).send('Faltan parámetros: id_asignatura o fecha_clase');
     }
 
+    // Validar el formato de la fecha
+    if (!moment(fecha_clase, 'YYYY-MM-DD', true).isValid()) {
+      return res.status(400).json({ error: 'Formato de fecha inválido. Use YYYY-MM-DD.' });
+    }
+
+    // Convertir la fecha al formato que la base de datos espera (si es necesario)
+    const fechaFormateada = moment(fecha_clase, 'YYYY-MM-DD').format('YYYY-MM-DD');
+
+    // Consulta para obtener el código QR
     const query = `
       SELECT codigoqr_clase 
       FROM clases 
-      WHERE id_asignatura = ? AND fecha_clase = ? 
-      GROUP BY codigoqr_clase
+      WHERE id_asignatura = ? AND fecha_clase = ?
     `;
-    const [rows] = await db.promise().query(query, [id_asignatura, fecha_clase]);
+
+    const [rows] = await db.promise().query(query, [id_asignatura, fechaFormateada]);
 
     console.log('Resultado de la consulta:', rows);
 
@@ -614,6 +624,7 @@ app.get('/clase/codigoqr', async (req, res) => {
       return res.status(404).send('No se encontraron resultados para los parámetros proporcionados.');
     }
 
+    // Enviar el primer resultado (asumiendo que debe ser único)
     res.status(200).json(rows[0]);
   } catch (error) {
     console.error('Error al obtener el código QR de la clase:', error.message);
