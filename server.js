@@ -547,7 +547,7 @@ app.get('/clases/fecha/:fecha', (req, res) => {
 app.post('/insertAsistencia/automatica', (req, res) => {
   const { id_clase, id_estudiante, fecha_asistencia } = req.body;
 
-  connection.query(
+  db.query(
     'INSERT INTO asistencia(id_clase, id_estudiante, asistencia, fecha_asistencia) VALUES (?, ?, 0, ?)',
     [id_clase, id_estudiante, fecha_asistencia],
     (error, results) => {
