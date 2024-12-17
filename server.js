@@ -435,16 +435,27 @@ app.post('/insertAsignatura', (req, res) => {
 // Eliminar asignatura
 app.delete('/deleteAsignatura/:id_asignatura', (req, res) => {
   const { id_asignatura } = req.params;
-  const query = `DELETE FROM asignatura WHERE id_asignatura = ?;`;
+
+  if (!id_asignatura) {
+    return res.status(400).json({ error: 'El ID de la asignatura es obligatorio' });
+  }
+
+  const query = `DELETE FROM asignatura WHERE id_asignatura = ?`;
 
   db.query(query, [id_asignatura], (err, result) => {
     if (err) {
       console.error('Error al eliminar asignatura:', err);
       return res.status(500).json({ error: 'Error al eliminar la asignatura' });
     }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Asignatura no encontrada' });
+    }
+
     res.status(200).json({ message: 'Asignatura eliminada correctamente' });
   });
 });
+
 
 
 

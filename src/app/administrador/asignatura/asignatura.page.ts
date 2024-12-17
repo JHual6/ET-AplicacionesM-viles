@@ -102,35 +102,17 @@ export class AsignaturaPage implements OnInit {
   }
   // Eliminar asignatura
   eliminarAsignatura(id_asignatura: number) {
-    this.alertController.create({
-      header: 'Confirmar eliminación',
-      message: '¿Estás seguro de que deseas eliminar esta asignatura?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
-              (response) => {
-                console.log(response.message);
-                this.alertController.create({
-                  header: 'Éxito',
-                  message: 'Asignatura eliminada correctamente',
-                  buttons: ['OK'],
-                }).then(alert => alert.present());
-  
-                // Actualizar la lista de asignaturas
-                this.cargarAsignaturas();
-              },
-              (error) => console.error('Error al eliminar la asignatura', error)
-            );
-          },
-        },
-      ],
-    }).then(alert => alert.present());
+    console.log(`ID recibido para eliminar: ${id_asignatura}`);
+    this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
+      (response) => {
+        console.log(response.message);
+        this.cargarAsignaturas(); // Actualizar vista
+      },
+      (error) => {
+        console.error('Error al eliminar la asignatura', error);
+      }
+    );
   }
+  
   
 }

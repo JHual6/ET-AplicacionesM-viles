@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DatabaseService {
-  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io/'; // Cambia esta URL si es necesario
+  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io'; // Cambia esta URL si es necesario
 
   constructor(private http: HttpClient) {}
 
@@ -114,8 +114,10 @@ export class DatabaseService {
     return this.http.post(`${this.baseUrl}/insertAsignatura`, asignatura);
   }
   deleteAsignatura(id_asignatura: number) {
+    console.log(`Eliminando asignatura con ID: ${id_asignatura}`);
     return this.http.delete<any>(`${this.baseUrl}/deleteAsignatura/${id_asignatura}`);
   }
+  
   
 }
 
