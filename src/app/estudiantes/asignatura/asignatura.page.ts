@@ -169,7 +169,7 @@ export class AsignaturaPage implements OnInit {
     } else {
       console.error('ID de asignatura o estudiante no disponible.');
     }
-  }  
+  }   
 
   insertarAsistencia(idClase: number | null, idEstudiante: string | null, fechaAsistencia: string) {
     if (idClase && idEstudiante) {
