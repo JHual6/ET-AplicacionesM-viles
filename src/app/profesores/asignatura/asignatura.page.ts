@@ -110,14 +110,18 @@ export class AsignaturaPage implements OnInit {
     if (this.estudiantes.length > 0) {
       const fechaAsistencia = this.fechaClase;
       this.estudiantes.forEach(estudiante => {
-        this.databaseservice.insertAsistenciaautomatica(idClase, estudiante.id, fechaAsistencia).subscribe(
-          response => {
-            console.log('Asistencia insertada para estudiante:', estudiante.id);
-          },
-          error => {
-            console.error('Error al insertar asistencia para el estudiante:', estudiante.id, error);
-          }
-        );
+        if (estudiante.id_estudiante) {
+          this.databaseservice.insertAsistenciaautomatica(idClase, estudiante.id_estudiante, fechaAsistencia).subscribe(
+            response => {
+              console.log('Asistencia insertada para estudiante:', estudiante.id_estudiante);
+            },
+            error => {
+              console.error('Error al insertar asistencia para el estudiante:', estudiante.id_estudiante, error);
+            }
+          );
+        } else {
+          console.error('El estudiante no tiene un ID válido:', estudiante);
+        }
       });
     }
   }
