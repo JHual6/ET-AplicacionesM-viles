@@ -355,18 +355,26 @@ app.get('/asignatura/:id', (req, res) => {
       res.json(results[0]); // Devuelve la información de la asignatura
   });
 }); 
+// Insertar nueva clase
 app.post('/insertClase', (req, res) => {
-    const { id_asignatura, fecha_clase, codigoqr_clase } = req.body;
+  const { id_asignatura, fecha_clase, codigoqr_clase } = req.body;
+
+  if (!id_asignatura || !fecha_clase || !codigoqr_clase) {
+    return res.status(400).send({ error: 'Faltan datos requeridos.' });
+  }
+
   const query = `
     INSERT INTO clases (id_asignatura, fecha_clase, codigoqr_clase)
     VALUES (?, ?, ?)
   `;
+
   db.query(query, [id_asignatura, fecha_clase, codigoqr_clase], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'Error al insertar la clase' });
+    if (err) {
+      console.error('Error al insertar nueva clase:', err);
+      return res.status(500).send({ error: 'Error al insertar nueva clase' });
     }
-    res.status(200).json({ message: 'Clase insertada correctamente', id_clase: result.insertId });
+
+    res.status(201).send({ message: 'Clase insertada correctamente', id: result.insertId });
   });
 });
 
@@ -607,7 +615,7 @@ app.get('/clase/codigoqr', async (req, res) => {
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    console.error('Error al obtener el código QR de la clase:', error);
+    console.error('Error al obtener el código QR de la clase:', error.message);
     res.status(500).send('Error al obtener el código QR de la clase');
   }
 });
