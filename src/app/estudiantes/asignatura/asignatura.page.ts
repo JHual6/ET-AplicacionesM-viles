@@ -83,42 +83,29 @@ export class AsignaturaPage implements OnInit {
 
   async escanearQR() {
     try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.DataUrl,
-      });
-
-      if (image && image.dataUrl) {
-        const base64Image = image.dataUrl;
-        console.log('Imagen capturada:', base64Image);
-
-        this.apiService.readQrCode(base64Image).subscribe({
-          next: (response) => {
-            const scannedData = response[0]?.symbol[0]?.data || null;
-
-            if (scannedData) {
-              console.log('Código QR escaneado:', scannedData);
-              this.qrCodeData = scannedData;
-
-              this.obtenerUrlQr();
-            } else {
-              console.error('No se pudo decodificar el QR escaneado.');
-            }
-          },
-          error: (error) => {
-            console.error('Error al decodificar el QR escaneado:', error);
-          },
+        const image = await Camera.getPhoto({
+            quality: 90,
+            allowEditing: false,
+            resultType: CameraResultType.DataUrl,
         });
-      }
+        if (image?.dataUrl) {
+            const response = await this.apiService.readQrCode(image.dataUrl).toPromise();
+            const scannedData = response[0]?.symbol[0]?.data || null;
+            if (scannedData) {
+                this.qrCodeData = scannedData;
+                await this.obtenerUrlQr();
+            } else {
+                console.error('No se pudo decodificar el QR escaneado.');
+            }
+        }
     } catch (error) {
-      console.error('Error abriendo la cámara:', error);
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo abrir la cámara.',
-        buttons: ['OK'],
-      });
-      await alert.present();
+        console.error('Error al escanear el QR:', error);
+        const alert = await this.alertController.create({
+            header: 'Error',
+            message: 'No se pudo abrir la cámara.',
+            buttons: ['OK'],
+        });
+        await alert.present();
     }
   }
 
@@ -126,7 +113,7 @@ export class AsignaturaPage implements OnInit {
     const fechaClase = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
   
     if (this.idAsignatura && this.nombre_estudiante) {
-      this.databaseService.getCodigoQRClase(this.idAsignatura, fechaClase).subscribe({
+      this.databaseService.getCodigoQRdeClase(this.idAsignatura, fechaClase).subscribe({
         next: (response) => {
           const qrUrl = response?.url || null; // Ajusta según la estructura de tu respuesta
   

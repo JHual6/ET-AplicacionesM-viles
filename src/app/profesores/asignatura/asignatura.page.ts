@@ -97,7 +97,7 @@ export class AsignaturaPage implements OnInit {
       (response: any) => {
         console.log(response);
         // Insertar asistencia automática después de crear la clase
-        this.insertarAsistenciaAutomatica(response.id_clase);
+        this.insertarAsistenciaAutomatica(response.id);
       },
       (error) => {
         console.error('Error al insertar la clase:', error);

@@ -176,4 +176,13 @@ export class DatabaseService {
 
     return this.http.post(`${this.baseUrl}/insertarCorrecta/asistencia`, payload);
   }
+  getCodigoQRdeClase(idAsignatura: number, fechaClase: string): Observable<any> {
+    const url = `${this.baseUrl}/clases/codigoQR`;
+    return this.http.get<any>(url, {
+      params: {
+        id_asignatura: idAsignatura.toString(),
+        fecha_clase: fechaClase,
+      },
+    });
+  }
 }

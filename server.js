@@ -654,3 +654,21 @@ app.post('/insertarCorrecta/asistencia', (req, res) => {
     res.send({ message: 'Asistencia registrada exitosamente', result });
   });
 });
+app.get('/clases/codigoQR', (req, res) => {
+  const { id_asignatura, fecha_clase } = req.query;
+
+  const query = `
+    SELECT id_clase, id_asignatura, fecha_clase, codigoqr_clase 
+    FROM clases 
+    WHERE id_asignatura = ? AND fecha_clase = ?;
+  `;
+
+  db.query(query, [id_asignatura, fecha_clase], (err, results) => {
+    if (err) {
+      console.error('Error al ejecutar la consulta:', err);
+      res.status(500).json({ message: 'Error en la consulta de la base de datos.' });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
