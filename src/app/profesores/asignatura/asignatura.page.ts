@@ -41,7 +41,7 @@ export class AsignaturaPage implements OnInit {
         // Filtramos las clases donde la asistencia es 1 (presente)
         const totalAsistencias = asistenciaData.length;
         const asistenciasPresentes = asistenciaData.filter(a => a.asistencia === 1).length;
-  
+
         // Calculamos el porcentaje de asistencia
         this.porcentajeAsistencia = (asistenciasPresentes / totalAsistencias) * 100;
         
@@ -53,17 +53,17 @@ export class AsignaturaPage implements OnInit {
           color_seccion_asignatura: asistenciaData[0].color_seccion_asignatura || '#000000', // Color de la sección (default negro)
           seccion_asignatura: this.porcentajeAsistencia.toFixed(2), // Asistencia en porcentaje
         };
-  
+
         // Guarda estos valores en las variables respectivas
         const nombreAsignatura = this.asignatura.nombre_asignatura;
         const colorAsignatura = this.asignatura.color_asignatura;
         const colorSeccionAsignatura = this.asignatura.color_seccion_asignatura;
-  
+
         // Imprime los valores en la consola para verificar
         console.log('Nombre Asignatura:', nombreAsignatura);
         console.log('Color Asignatura:', colorAsignatura);
         console.log('Color Sección Asignatura:', colorSeccionAsignatura);
-  
+
         console.log('Asignatura cargada:', this.asignatura);
       },
       error: (error) => {
@@ -85,31 +85,52 @@ export class AsignaturaPage implements OnInit {
     // Inserta la clase en el servidor
     this.insertarClase();
   }
+
   // Función para insertar los datos en el servidor
   insertarClase() {
-   const data = {
-     id_asignatura: this.idAsignatura,
-     fecha_clase: this.fechaClase,
-     codigoqr_clase: this.codigoQrClase,
-   };
-     this.databaseservice.insertarClase(data).subscribe(
-     (response: any) => {
-       console.log(response);
-     },
-     (error) => {
-       console.error('Error al insertar la clase:', error);
-     }
-   );
+    const data = {
+      id_asignatura: this.idAsignatura,
+      fecha_clase: this.fechaClase,
+      codigoqr_clase: this.codigoQrClase,
+    };
+    this.databaseservice.insertarClase(data).subscribe(
+      (response: any) => {
+        console.log(response);
+        // Insertar asistencia automática después de crear la clase
+        this.insertarAsistenciaAutomatica(response.id_clase);
+      },
+      (error) => {
+        console.error('Error al insertar la clase:', error);
+      }
+    );
   }
+
+  // Función para insertar la asistencia automática para cada estudiante
+  insertarAsistenciaAutomatica(idClase: number) {
+    if (this.estudiantes.length > 0) {
+      const fechaAsistencia = this.fechaClase;
+      this.estudiantes.forEach(estudiante => {
+        this.databaseservice.insertAsistenciaautomatica(idClase, estudiante.id, fechaAsistencia).subscribe(
+          response => {
+            console.log('Asistencia insertada para estudiante:', estudiante.id);
+          },
+          error => {
+            console.error('Error al insertar asistencia para el estudiante:', estudiante.id, error);
+          }
+        );
+      });
+    }
+  }
+
   getTextColor(color: string): string {
     // Convertimos el color hexadecimal en valores RGB
     const r = parseInt(color.slice(0, 2), 16);
     const g = parseInt(color.slice(2, 4), 16);
     const b = parseInt(color.slice(4, 6), 16);
-  
+
     // Calculamos el brillo del color
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  
+
     // Si el brillo es bajo, devolvemos blanco; de lo contrario, negro
     return brightness < 128 ? '#ffffff' : '#000000';
   }
