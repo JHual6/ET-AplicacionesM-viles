@@ -462,7 +462,7 @@ app.delete('/deleteClases/:id_asignatura', (req, res) => {
   // Eliminar las clases asociadas con la asignatura
   const deleteClasesQuery = `DELETE FROM clases WHERE id_asignatura = ?`;
 
-  connection.query(deleteClasesQuery, [idAsignatura], (err, result) => {
+  db.query(deleteClasesQuery, [idAsignatura], (err, result) => {
       if (err) {
           console.error('Error al eliminar las clases:', err);
           res.status(500).send('Error al eliminar las clases');
