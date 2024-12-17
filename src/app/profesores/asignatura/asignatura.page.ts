@@ -16,6 +16,7 @@ export class AsignaturaPage implements OnInit {
   porcentajeAsistencia: number = 0; // Variable para almacenar el porcentaje de asistencia
   fechaClase: string = ''; // Fecha seleccionada en el input
   codigoQrClase: string = ''; // Código QR generado
+  estudiantes: any[] = []; // Arreglo para almacenar los estudiantes de la asignatura
 
   constructor(private apiService: ApiService, private route: ActivatedRoute, private databaseservice: DatabaseService) {}
 
@@ -27,6 +28,7 @@ export class AsignaturaPage implements OnInit {
 
     if (this.idAsignatura && this.idProfesor) {
       this.cargarDatosAsignatura(this.idAsignatura, this.idProfesor); // Llama a la función para cargar los datos de la asignatura
+      this.obtenerEstudiantesAsignatura(); // Obtiene los estudiantes de la asignatura
     } else {
       console.error('No se proporcionó el ID de la asignatura o del profesor.');
     }
@@ -110,5 +112,18 @@ export class AsignaturaPage implements OnInit {
   
     // Si el brillo es bajo, devolvemos blanco; de lo contrario, negro
     return brightness < 128 ? '#ffffff' : '#000000';
+  }
+
+  obtenerEstudiantesAsignatura() {
+    if (this.idAsignatura) {
+      this.databaseservice.getEstudiantesAsignatura(Number(this.idAsignatura)).subscribe({
+        next: (data: any[]) => {
+          this.estudiantes = data;
+        },
+        error: (error) => {
+          console.error('Error al obtener estudiantes:', error);
+        }
+      });
+    }
   }
 }

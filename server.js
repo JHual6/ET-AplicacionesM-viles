@@ -514,22 +514,6 @@ app.post('/insertAsistencia', (req, res) => {
       res.status(201).json({ message: 'Asistencia registrada exitosamente', results });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Ruta para obtener clases por fecha
 app.get('/clases/fecha/:fecha', (req, res) => {
   const fechaClase = req.params.fecha;
@@ -558,4 +542,42 @@ app.get('/clases/fecha/:fecha', (req, res) => {
     console.log('Resultados obtenidos:', results);
     res.json(results); // Enviar solo las columnas seleccionadas
   });
+});
+// Route para insertar asistencia
+app.post('/insertAsistencia/automatica', (req, res) => {
+  const { id_clase, id_estudiante, fecha_asistencia } = req.body;
+
+  connection.query(
+    'INSERT INTO asistencia(id_clase, id_estudiante, asistencia, fecha_asistencia) VALUES (?, ?, 0, ?)',
+    [id_clase, id_estudiante, fecha_asistencia],
+    (error, results) => {
+      if (error) {
+        console.error('Error al insertar la asistencia:', error);
+        res.status(500).send({ message: 'Error al insertar la asistencia' });
+      } else {
+        res.status(200).send({ message: 'Asistencia registrada exitosamente' });
+      }
+    }
+  );
+});
+// Route para obtener estudiantes de una asignatura
+app.get('/getEstudiantesAsignatura/:id_asignatura', (req, res) => {
+  const id_asignatura = req.params.id_asignatura;
+
+  db.query(
+    'SELECT asistencia.id_estudiante FROM asistencia ' +
+    'INNER JOIN clases ON clases.id_clase = asistencia.id_clase ' +
+    'INNER JOIN asignatura ON asignatura.id_asignatura = clases.id_asignatura ' +
+    'WHERE asignatura.id_asignatura = ? ' +
+    'GROUP BY asistencia.id_estudiante',
+    [id_asignatura],
+    (error, results) => {
+      if (error) {
+        console.error('Error al obtener los estudiantes:', error);
+        res.status(500).send({ message: 'Error al obtener los estudiantes' });
+      } else {
+        res.status(200).send(results);
+      }
+    }
+  );
 });

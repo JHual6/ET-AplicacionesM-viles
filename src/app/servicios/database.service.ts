@@ -130,6 +130,23 @@ export class DatabaseService {
     const body = { id_clase, id_estudiante, fecha_asistencia };
     return this.http.post<any>(`${this.baseUrl}/insertAsistencia`, body);
   }
-  
+  insertAsistenciaautomatica(id_clase: number, id_estudiante: number, fecha_asistencia: string) {
+    return new Observable(observer => {
+      this.http.post(`${this.baseUrl}/insertAsistencia/automatica`, { id_clase, id_estudiante, fecha_asistencia })
+        .subscribe(
+          response => {
+            observer.next(response);
+            observer.complete();
+          },
+          error => {
+            console.error('Error al insertar la asistencia:', error);
+            observer.error(error);
+          }
+        );
+    });
+  }
+  getEstudiantesAsignatura(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/getEstudiantesAsignatura/${id}`);
+  }  
 }
 
