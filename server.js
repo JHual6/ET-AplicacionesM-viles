@@ -432,6 +432,19 @@ app.post('/insertAsignatura', (req, res) => {
       });
   });
 });
+// Eliminar asignatura
+app.delete('/deleteAsignatura/:id_asignatura', (req, res) => {
+  const { id_asignatura } = req.params;
+  const query = `DELETE FROM asignatura WHERE id_asignatura = ?;`;
+
+  db.query(query, [id_asignatura], (err, result) => {
+    if (err) {
+      console.error('Error al eliminar asignatura:', err);
+      return res.status(500).json({ error: 'Error al eliminar la asignatura' });
+    }
+    res.status(200).json({ message: 'Asignatura eliminada correctamente' });
+  });
+});
 
 
 

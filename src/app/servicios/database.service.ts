@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DatabaseService {
-  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io'; 
+  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io/'; // Cambia esta URL si es necesario
 
   constructor(private http: HttpClient) {}
 
@@ -109,8 +109,13 @@ export class DatabaseService {
     const url = `${this.baseUrl}/clases/fecha/${fecha}`;
     return this.http.get<any>(url);
   }  
+  // Método para insertar una asignatura
   insertAsignatura(asignatura: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/insertAsignatura`, asignatura);
   }
+  deleteAsignatura(id_asignatura: number) {
+    return this.http.delete<any>(`${this.baseUrl}/deleteAsignatura/${id_asignatura}`);
+  }
+  
 }
 

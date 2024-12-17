@@ -31,8 +31,7 @@ export class AsignaturaPage implements OnInit {
     });
   }
 
-   // Agregar asignatura
-   async agregarAsignatura() {
+  async agregarAsignatura() {
     const alert = await this.alertController.create({
       header: 'Agregar Asignatura',
       inputs: [
@@ -61,15 +60,30 @@ export class AsignaturaPage implements OnInit {
               seccion_asignatura: data.seccion_asignatura,
               modalidad_asignatura: data.modalidad_asignatura,
             };
-
+  
+            // Insertar asignatura en la base de datos
             this.databaseservice.insertAsignatura(nuevaAsignatura).subscribe(
               (response) => {
                 console.log(response.message);
-                this.alertController.create({
-                  header: 'Éxito',
-                  message: 'Asignatura agregada correctamente',
-                  buttons: ['OK']
-                }).then(alert => alert.present());
+  
+                // Insertar clase vinculada
+                const nuevaClase = {
+                  id_asignatura: response.id_asignatura, // ID de la asignatura recién creada
+                  fecha_clase: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
+                  codigoqr_clase: 'Clase de inscripción', // Código QR predeterminado
+                };
+  
+                this.databaseservice.insertarClase(nuevaClase).subscribe(
+                  (res) => {
+                    console.log(res.message);
+                    this.alertController.create({
+                      header: 'Éxito',
+                      message: 'Asignatura y clase creadas correctamente',
+                      buttons: ['OK'],
+                    }).then((alert) => alert.present());
+                  },
+                  (error) => console.error('Error al insertar la clase', error)
+                );
               },
               (error) => console.error('Error al agregar asignatura', error)
             );
@@ -77,16 +91,46 @@ export class AsignaturaPage implements OnInit {
         },
       ],
     });
-
+  
     await alert.present();
   }
+  
 
   // Editar asignatura con alerta
   async agregarEstudiantes(asignatura: any) {
     console.log('Editar asignatura:', asignatura);
   }
   // Eliminar asignatura
-  eliminarAsignatura(asignatura: any) {
-    console.log('Eliminar asignatura:', asignatura);
+  eliminarAsignatura(id_asignatura: number) {
+    this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que deseas eliminar esta asignatura?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
+              (response) => {
+                console.log(response.message);
+                this.alertController.create({
+                  header: 'Éxito',
+                  message: 'Asignatura eliminada correctamente',
+                  buttons: ['OK'],
+                }).then(alert => alert.present());
+  
+                // Actualizar la lista de asignaturas
+                this.cargarAsignaturas();
+              },
+              (error) => console.error('Error al eliminar la asignatura', error)
+            );
+          },
+        },
+      ],
+    }).then(alert => alert.present());
   }
+  
 }
