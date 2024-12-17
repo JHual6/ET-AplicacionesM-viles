@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -151,7 +152,16 @@ export class DatabaseService {
   // Obtener el código QR de la clase según la asignatura y fecha
   getCodigoQRClase(id_asignatura: number, fecha_clase: string): Observable<any> {
     const url = `${this.baseUrl}/clase/codigoqr`;
-    return this.http.get<any>(url);
+    const params = new HttpParams()
+      .set('id_asignatura', id_asignatura.toString())
+      .set('fecha_clase', fecha_clase);
+
+    return this.http.get<any>(url, { params }).pipe(
+      catchError(error => {
+        console.error('Error al obtener el código QR:', error);
+        return throwError('Hubo un error al obtener el código QR. Por favor, inténtelo de nuevo más tarde.');
+      })
+    );
   }
   registrarAsistencia(
     idClase: number,

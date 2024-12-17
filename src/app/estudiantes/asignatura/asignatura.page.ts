@@ -37,26 +37,25 @@ export class AsignaturaPage implements OnInit {
   cargarDatosAsignatura(idAsignatura: number, idEstudiante: string) {
     this.databaseService.getAsignaturaDetalle(idAsignatura, idEstudiante).subscribe({
       next: (data: any[]) => {
-        // Verifica si hay datos en el array
         if (data.length > 0) {
-          const asignaturaData = data[0]; // Obtiene la primera asignatura del array
-  
+          const asignaturaData = data[0];
+
           const totalAsistencias = asignaturaData.count_total_asistencias;
           const asistenciasPresentes = asignaturaData.count_asistencias;
-  
+
           console.log(asignaturaData);
-  
+
           this.porcentajeAsistencia = totalAsistencias > 0
             ? (asistenciasPresentes / totalAsistencias) * 100
             : 0;
-  
+
           this.asignatura = {
             nombre_asignatura: asignaturaData.nombre_asignatura,
             color_asignatura: asignaturaData.color_asignatura,
             color_seccion_asignatura: asignaturaData.color_seccion_asignatura,
             seccion_asignatura: asignaturaData.seccion_asignatura,
           };
-  
+
           console.log('Datos de asignatura cargados:', this.asignatura);
         } else {
           console.error('No se encontraron asignaturas para el estudiante.');
@@ -72,13 +71,13 @@ export class AsignaturaPage implements OnInit {
     if (!color || color.length < 6) {
       return '#000000'; // Color predeterminado
     }
-  
+
     const r = parseInt(color.slice(0, 2), 16);
     const g = parseInt(color.slice(2, 4), 16);
     const b = parseInt(color.slice(4, 6), 16);
-  
+
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  
+
     return brightness < 128 ? '#ffffff' : '#000000';
   }
 
@@ -87,23 +86,21 @@ export class AsignaturaPage implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
-        resultType: CameraResultType.DataUrl, // Imagen en formato base64
+        resultType: CameraResultType.DataUrl,
       });
-  
+
       if (image && image.dataUrl) {
         const base64Image = image.dataUrl;
         console.log('Imagen capturada:', base64Image);
-  
-        // Decodifica el QR escaneado con la API
+
         this.apiService.readQrCode(base64Image).subscribe({
           next: (response) => {
             const scannedData = response[0]?.symbol[0]?.data || null;
-  
+
             if (scannedData) {
               console.log('Código QR escaneado:', scannedData);
-              this.qrCodeData = scannedData; // Guarda el QR escaneado
-  
-              // Consulta la URL desde la tabla codigoqr_clase
+              this.qrCodeData = scannedData;
+
               this.obtenerUrlQr();
             } else {
               console.error('No se pudo decodificar el QR escaneado.');
@@ -124,7 +121,7 @@ export class AsignaturaPage implements OnInit {
       await alert.present();
     }
   }
-  
+
   obtenerUrlQr() {
     const fechaClase = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
   
@@ -132,22 +129,22 @@ export class AsignaturaPage implements OnInit {
       this.databaseService.getCodigoQRClase(this.idAsignatura, fechaClase).subscribe({
         next: (response) => {
           const qrUrl = response?.url || null; // Ajusta según la estructura de tu respuesta
-        
+  
           if (qrUrl) {
             console.log('URL obtenida desde la base de datos:', qrUrl);
-          
+  
             // Decodifica el QR desde la URL
             this.apiService.readQrCode(qrUrl).subscribe({
               next: (response) => {
                 const urlData = response[0]?.symbol[0]?.data || null;
-              
+  
                 if (urlData) {
                   console.log('Código QR desde URL:', urlData);
-                
+  
                   // Compara el QR escaneado con el QR desde la URL
                   if (this.qrCodeData === urlData) {
                     console.log('¡Los códigos QR son iguales!');
-                  
+  
                     // Inserta los datos en la tabla asistencia
                     this.insertarAsistencia(this.idAsignatura, this.nombre_estudiante, fechaClase);
                   } else {
@@ -172,8 +169,8 @@ export class AsignaturaPage implements OnInit {
     } else {
       console.error('ID de asignatura o estudiante no disponible.');
     }
-  }
-  
+  }  
+
   insertarAsistencia(idClase: number | null, idEstudiante: string | null, fechaAsistencia: string) {
     if (idClase && idEstudiante) {
       this.databaseService.insertAsistencia(idClase, Number(idEstudiante), fechaAsistencia).subscribe({
