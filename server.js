@@ -603,7 +603,8 @@ app.get('/clase/codigoqr', async (req, res) => {
     const query = `
       SELECT codigoqr_clase 
       FROM clases 
-      WHERE id_asignatura = ? AND fecha_clase = ?
+      WHERE id_asignatura = ? AND fecha_clase = ? 
+      GROUP BY codigoqr_clase
     `;
     const [rows] = await db.promise().query(query, [id_asignatura, fecha_clase]);
 
