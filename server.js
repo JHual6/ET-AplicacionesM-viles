@@ -595,7 +595,7 @@ app.get('/clase/codigoqr', async (req, res) => {
       FROM clases 
       WHERE id_asignatura = ? AND fecha_clase = ?
     `;
-    const [rows] = await connection.promise().query(query, [id_asignatura, fecha_clase]);
+    const [rows] = await db.promise().query(query, [id_asignatura, fecha_clase]);
 
     if (rows.length === 0) {
       return res.status(404).send('No se encontraron resultados para los parámetros proporcionados.');
