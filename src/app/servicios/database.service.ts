@@ -148,5 +148,22 @@ export class DatabaseService {
   getEstudiantesAsignatura(id: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/getEstudiantesAsignatura/${id}`);
   }  
-}
+  // Obtener el código QR de la clase según la asignatura y fecha
+  getCodigoQRClase(id_asignatura: number, fecha_clase: string): Observable<any> {
+    const url = `${this.baseUrl}/clase/codigoqr?id_asignatura=${id_asignatura}&fecha_clase=${fecha_clase}`;
+    return this.http.get<any>(url);
+  }
+  registrarAsistencia(
+    idClase: number,
+    idEstudiante: string,
+    fechaAsistencia: string
+  ): Observable<any> {
+    const payload = {
+      id_clase: idClase,
+      id_estudiante: idEstudiante,
+      fecha_asistencia: fechaAsistencia,
+    };
 
+    return this.http.post(`${this.baseUrl}/insertarCorrecta/asistencia`, payload);
+  }
+}

@@ -581,3 +581,51 @@ app.get('/getEstudiantesAsignatura/:id_asignatura', (req, res) => {
     }
   );
 });
+
+app.get('/clase/codigoqr', async (req, res) => {
+  try {
+    const { id_asignatura, fecha_clase } = req.query;
+
+    if (!id_asignatura || !fecha_clase) {
+      return res.status(400).send('Faltan parámetros: id_asignatura o fecha_clase');
+    }
+
+    const query = `
+      SELECT codigoqr_clase 
+      FROM clases 
+      WHERE id_asignatura = ? AND fecha_clase = ?
+    `;
+    const [rows] = await connection.promise().query(query, [id_asignatura, fecha_clase]);
+
+    if (rows.length === 0) {
+      return res.status(404).send('No se encontraron resultados para los parámetros proporcionados.');
+    }
+
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error('Error al obtener el código QR de la clase:', error);
+    res.status(500).send('Error al obtener el código QR de la clase');
+  }
+});
+// Ruta para insertar una asistencia
+app.post('/insertarCorrecta/asistencia', (req, res) => {
+  const { id_clase, id_estudiante, fecha_asistencia } = req.body;
+
+  if (!id_clase || !id_estudiante || !fecha_asistencia) {
+    return res.status(400).send({ error: 'Faltan datos requeridos' });
+  }
+
+  const query = `
+    INSERT INTO asistencia (id_clase, id_estudiante, asistencia, fecha_asistencia)
+    VALUES (?, ?, 1, ?)
+  `;
+
+  db.query(query, [id_clase, id_estudiante, fecha_asistencia], (err, result) => {
+    if (err) {
+      console.error('Error al insertar asistencia:', err);
+      return res.status(500).send({ error: 'Error al insertar asistencia' });
+    }
+
+    res.send({ message: 'Asistencia registrada exitosamente', result });
+  });
+});

@@ -42,5 +42,6 @@
     <button mat-fab extended class="boton-qr" (click)="escanearQR()">
       <mat-icon style="color: #ffffff;">qr_code</mat-icon>
     </button>
+    <p *ngIf="qrCodeData">Código QR Escaneado: {{ qrCodeData }}</p>
   </div>
 </ion-content>

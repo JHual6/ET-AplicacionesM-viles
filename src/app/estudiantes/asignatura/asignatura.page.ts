@@ -67,31 +67,6 @@ export class AsignaturaPage implements OnInit {
       },
     });
   }
- 
-
-  async escanearQR() {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.DataUrl, 
-      });
-  
-      if (image && image.dataUrl) {
-        const base64Image = image.dataUrl;
-        console.log('Imagen capturada:', base64Image);
-      }
-  
-    } catch (error) {
-      console.error('Error abriendo la cámara:', error);
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No se pudo abrir la cámara.',
-        buttons: ['OK']
-      });
-      await alert.present();
-    }
-  }
 
   getTextColor(color: string | undefined): string {
     if (!color || color.length < 6) {
@@ -106,5 +81,109 @@ export class AsignaturaPage implements OnInit {
   
     return brightness < 128 ? '#ffffff' : '#000000';
   }
+
+  async escanearQR() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl, // Imagen en formato base64
+      });
   
+      if (image && image.dataUrl) {
+        const base64Image = image.dataUrl;
+        console.log('Imagen capturada:', base64Image);
+  
+        // Decodifica el QR escaneado con la API
+        this.apiService.readQrCode(base64Image).subscribe({
+          next: (response) => {
+            const scannedData = response[0]?.symbol[0]?.data || null;
+  
+            if (scannedData) {
+              console.log('Código QR escaneado:', scannedData);
+              this.qrCodeData = scannedData; // Guarda el QR escaneado
+  
+              // Consulta la URL desde la tabla codigoqr_clase
+              this.obtenerUrlQr();
+            } else {
+              console.error('No se pudo decodificar el QR escaneado.');
+            }
+          },
+          error: (error) => {
+            console.error('Error al decodificar el QR escaneado:', error);
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error abriendo la cámara:', error);
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'No se pudo abrir la cámara.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+    }
+  }
+  
+  obtenerUrlQr() {
+    const fechaClase = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato YYYY-MM-DD
+  
+    if (this.idAsignatura && this.nombre_estudiante) {
+      this.databaseService.getCodigoQRClase(this.idAsignatura, fechaClase).subscribe({
+        next: (response) => {
+          const qrUrl = response?.url || null; // Ajusta según la estructura de tu respuesta
+        
+          if (qrUrl) {
+            console.log('URL obtenida desde la base de datos:', qrUrl);
+          
+            // Decodifica el QR desde la URL
+            this.apiService.readQrCode(qrUrl).subscribe({
+              next: (response) => {
+                const urlData = response[0]?.symbol[0]?.data || null;
+              
+                if (urlData) {
+                  console.log('Código QR desde URL:', urlData);
+                
+                  // Compara el QR escaneado con el QR desde la URL
+                  if (this.qrCodeData === urlData) {
+                    console.log('¡Los códigos QR son iguales!');
+                  
+                    // Inserta los datos en la tabla asistencia
+                    this.insertarAsistencia(this.idAsignatura, this.nombre_estudiante, fechaClase);
+                  } else {
+                    console.log('Los códigos QR son diferentes.');
+                  }
+                } else {
+                  console.error('No se pudo decodificar el QR desde la URL.');
+                }
+              },
+              error: (error) => {
+                console.error('Error al decodificar el QR desde la URL:', error);
+              },
+            });
+          } else {
+            console.error('No se pudo obtener la URL del QR.');
+          }
+        },
+        error: (error) => {
+          console.error('Error al consultar la URL del QR:', error);
+        },
+      });
+    } else {
+      console.error('ID de asignatura o estudiante no disponible.');
+    }
+  }
+  
+  insertarAsistencia(idClase: number | null, idEstudiante: string | null, fechaAsistencia: string) {
+    if (idClase && idEstudiante) {
+      this.databaseService.insertAsistencia(idClase, Number(idEstudiante), fechaAsistencia).subscribe({
+        next: () => {
+          console.log('Asistencia registrada exitosamente.');
+        },
+        error: (error) => {
+          console.error('Error al registrar la asistencia:', error);
+        },
+      });
+    }
+  }
 }
