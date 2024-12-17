@@ -586,6 +586,8 @@ app.get('/clase/codigoqr', async (req, res) => {
   try {
     const { id_asignatura, fecha_clase } = req.query;
 
+    console.log('Parámetros recibidos:', { id_asignatura, fecha_clase });
+
     if (!id_asignatura || !fecha_clase) {
       return res.status(400).send('Faltan parámetros: id_asignatura o fecha_clase');
     }
@@ -597,6 +599,8 @@ app.get('/clase/codigoqr', async (req, res) => {
     `;
     const [rows] = await db.promise().query(query, [id_asignatura, fecha_clase]);
 
+    console.log('Resultado de la consulta:', rows);
+
     if (rows.length === 0) {
       return res.status(404).send('No se encontraron resultados para los parámetros proporcionados.');
     }
@@ -607,6 +611,7 @@ app.get('/clase/codigoqr', async (req, res) => {
     res.status(500).send('Error al obtener el código QR de la clase');
   }
 });
+
 // Ruta para insertar una asistencia
 app.post('/insertarCorrecta/asistencia', (req, res) => {
   const { id_clase, id_estudiante, fecha_asistencia } = req.body;

@@ -150,7 +150,7 @@ export class DatabaseService {
   }  
   // Obtener el código QR de la clase según la asignatura y fecha
   getCodigoQRClase(id_asignatura: number, fecha_clase: string): Observable<any> {
-    const url = `${this.baseUrl}/clase/codigoqr?id_asignatura=${id_asignatura}&fecha_clase=${fecha_clase}`;
+    const url = `${this.baseUrl}/clase/codigoqr`;
     return this.http.get<any>(url);
   }
   registrarAsistencia(
