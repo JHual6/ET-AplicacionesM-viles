@@ -455,7 +455,23 @@ app.delete('/deleteAsignatura/:id_asignatura', (req, res) => {
     res.status(200).json({ message: 'Asignatura eliminada correctamente' });
   });
 });
+// Ruta para eliminar las clases asociadas con una asignatura
+app.delete('/deleteClases/:id_asignatura', (req, res) => {
+  const idAsignatura = req.params.id_asignatura;
 
+  // Eliminar las clases asociadas con la asignatura
+  const deleteClasesQuery = `DELETE FROM clases WHERE id_asignatura = ?`;
+
+  connection.query(deleteClasesQuery, [idAsignatura], (err, result) => {
+      if (err) {
+          console.error('Error al eliminar las clases:', err);
+          res.status(500).send('Error al eliminar las clases');
+      } else {
+          console.log('Clases eliminadas con éxito:', result);
+          res.status(200).send('Clases eliminadas con éxito');
+      }
+  });
+});
 
 
 

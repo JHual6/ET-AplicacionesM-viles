@@ -103,16 +103,29 @@ export class AsignaturaPage implements OnInit {
   // Eliminar asignatura
   eliminarAsignatura(id_asignatura: number) {
     console.log(`ID recibido para eliminar: ${id_asignatura}`);
-    this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
-      (response) => {
-        console.log(response.message);
-        this.cargarAsignaturas(); // Actualizar vista
+  
+    // Primero, elimina las clases asociadas
+    this.databaseservice.deleteClasesAsociadas(id_asignatura).subscribe(
+      () => {
+        console.log('Clases asociadas eliminadas con éxito.');
+  
+        // Luego, elimina la asignatura
+        this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
+          (response) => {
+            console.log(response.message);
+            this.cargarAsignaturas(); // Actualizar vista
+          },
+          (error) => {
+            console.error('Error al eliminar la asignatura', error);
+          }
+        );
       },
       (error) => {
-        console.error('Error al eliminar la asignatura', error);
+        console.error('Error al eliminar las clases asociadas', error);
       }
     );
   }
+  
   
   
 }

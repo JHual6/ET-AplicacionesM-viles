@@ -117,7 +117,10 @@ export class DatabaseService {
     console.log(`Eliminando asignatura con ID: ${id_asignatura}`);
     return this.http.delete<any>(`${this.baseUrl}/deleteAsignatura/${id_asignatura}`);
   }
-  
+  deleteClasesAsociadas(id_asignatura: number) {
+    console.log(`Eliminando clases asociadas con la asignatura ID: ${id_asignatura}`);
+    return this.http.delete<any>(`${this.baseUrl}/deleteClases/${id_asignatura}`);
+  }
   
 }
 
