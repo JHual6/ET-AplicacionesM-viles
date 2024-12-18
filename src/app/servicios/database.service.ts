@@ -196,23 +196,23 @@ export class DatabaseService {
   
     return this.http.put<any>(url, body);
   }
-    // Método para insertar un estudiante
-    insertarEstudiante(usuario: string, contrasena: string): Observable<any> {
-      const url = `${this.baseUrl}/insertar-estudiante`;
-      const body = {
-        usuario_estudiante: usuario,
-        contrasena_estudiante: contrasena
-      };
-      return this.http.post(url, body);
-    }
-  
-    // Método para insertar un profesor
-    insertarProfesor(usuario: string, contrasena: string): Observable<any> {
-      const url = `${this.baseUrl}/insertar-profesor`;
-      const body = {
-        usuario_profesor: usuario,
-        contrasena_profesor: contrasena
-      };
-      return this.http.post(url, body);
-    }
+  // Método para insertar un estudiante
+  insertarEstudiante(usuario: string, contrasena: string): Observable<any> {
+    const url = `${this.baseUrl}/insertar-estudiante`; // Asegúrate de que esta URL sea correcta
+    const body = {
+      usuario_estudiante: usuario,
+      contrasena_estudiante: contrasena
+    };
+    return this.http.post(url, body);
+  }
+
+  // Método para insertar un profesor
+  insertarProfesor(usuario: string, contrasena: string): Observable<any> {
+    const url = `${this.baseUrl}/insertar-profesor`; // Asegúrate de que esta URL sea correcta
+    const body = {
+      usuario_profesor: usuario,
+      contrasena_profesor: contrasena
+    };
+    return this.http.post(url, body);
+  }
 }

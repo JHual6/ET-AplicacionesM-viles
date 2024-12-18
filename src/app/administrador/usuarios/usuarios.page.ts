@@ -49,40 +49,96 @@ export class UsuariosPage implements OnInit {
         {
           text: 'Agregar',
           handler: async (data) => {
-            if (data.rol.toLowerCase() === 'profesor') {
-              // Llamar a insertarProfesor
-              await this.databaseService.insertarProfesor(
-                data.nombre,
-                data.contrasena
-              );
-            } else if (data.rol.toLowerCase() === 'estudiante') {
-              // Llamar a insertarEstudiante
-              await this.databaseService.insertarEstudiante(
-                data.nombre,
-                data.contrasena
-              );
-            } else {
-              // Rol inválido
-              const invalidRoleAlert = await this.alertController.create({
+            try {
+              // Validación de campos vacíos
+              if (!data.nombre || !data.contrasena || !data.rol) {
+                const emptyFieldAlert = await this.alertController.create({
+                  header: 'Error',
+                  message: 'Todos los campos son obligatorios.',
+                  buttons: ['OK'],
+                });
+                await emptyFieldAlert.present();
+                return false; // Cancela el cierre del modal
+              }
+  
+              // Validar y agregar según el rol
+              if (data.rol.toLowerCase() === 'profesor') {
+                this.databaseService.insertarProfesor(data.nombre, data.contrasena).subscribe(
+                  async (response) => {
+                    console.log('Profesor agregado:', response);
+                    await this.storageService.addUsuario(data.nombre, data.contrasena, data.rol.toLowerCase());
+                    this.usuarios = await this.storageService.getUsuarios();
+  
+                    const successAlert = await this.alertController.create({
+                      header: 'Éxito',
+                      message: `Profesor ${data.nombre} agregado correctamente.`,
+                      buttons: ['OK'],
+                    });
+                    await successAlert.present();
+                  },
+                  async (error) => {
+                    console.error('Error al agregar profesor:', error);
+                    const errorAlert = await this.alertController.create({
+                      header: 'Error',
+                      message: 'Ocurrió un error al agregar el profesor.',
+                      buttons: ['OK'],
+                    });
+                    await errorAlert.present();
+                  }
+                );
+              } else if (data.rol.toLowerCase() === 'estudiante') {
+                this.databaseService.insertarEstudiante(data.nombre, data.contrasena).subscribe(
+                  async (response) => {
+                    console.log('Estudiante agregado:', response);
+                    await this.storageService.addUsuario(data.nombre, data.contrasena, data.rol.toLowerCase());
+                    this.usuarios = await this.storageService.getUsuarios();
+  
+                    const successAlert = await this.alertController.create({
+                      header: 'Éxito',
+                      message: `Estudiante ${data.nombre} agregado correctamente.`,
+                      buttons: ['OK'],
+                    });
+                    await successAlert.present();
+                  },
+                  async (error) => {
+                    console.error('Error al agregar estudiante:', error);
+                    const errorAlert = await this.alertController.create({
+                      header: 'Error',
+                      message: 'Ocurrió un error al agregar el estudiante.',
+                      buttons: ['OK'],
+                    });
+                    await errorAlert.present();
+                  }
+                );
+              } else {
+                const invalidRoleAlert = await this.alertController.create({
+                  header: 'Error',
+                  message: 'Rol no válido. Use "profesor" o "estudiante".',
+                  buttons: ['OK'],
+                });
+                await invalidRoleAlert.present();
+                return false; // Cancela el cierre del modal
+              }
+  
+              return true; // Cierra el modal
+            } catch (error) {
+              console.error('Error al agregar usuario:', error);
+  
+              const errorAlert = await this.alertController.create({
                 header: 'Error',
-                message: 'Rol no válido. Use "profesor" o "estudiante".',
+                message: 'Ocurrió un error al agregar el usuario. Intente nuevamente.',
                 buttons: ['OK'],
               });
-              await invalidRoleAlert.present();
-              return false; // Cancelar el cierre del modal
+              await errorAlert.present();
+              return false; // Cancela el cierre del modal
             }
-
-            // Actualizar lista de usuarios después de agregar
-            this.usuarios = await this.storageService.getUsuarios();
-            return true; // Cerrar el modal después de una operación exitosa
           },
         },
       ],
     });
     await alert.present();
   }
-
-  
+      
   // Función para editar un usuario
   async editarUsuario(usuario: any) {
     const alert = await this.alertController.create({
