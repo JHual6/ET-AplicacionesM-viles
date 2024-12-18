@@ -10,7 +10,6 @@ import { AutenticacionService } from '../servicios/autenticacion.service';
 import { DatabaseService } from '../servicios/database.service';
 import { FirestoneMensajeService } from '../servicios/firestone-mensaje.service';
 
-
 // Tipo para las asignaturas
 type Asignatura = {
   usuario_estudiante: string;
@@ -38,7 +37,8 @@ export class InicioPage implements OnInit {
   rol: string = "";
   fondoClase: string = 'fondo';
   asignaturaE: any = null; // Asignatura seleccionada por estudiantes
-  isLoading: boolean = true;
+  isLoading: boolean = true; // Estado de carga
+  loadingMessage: string = 'Cargando inicio...'
   asignaturasP: any[] = []; // Asignaturas de profesores
   asignaturaP: any = null;  // Asignatura seleccionada por profesores
 
@@ -75,7 +75,23 @@ export class InicioPage implements OnInit {
       }
     });
   }
+  // Ejecutado cuando la vista está por entrar
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.loadingMessage = 'Cargando inicio...'; 
+    console.log('La vista está a punto de entrar');
 
+    if (this.username) {
+      this.obtenerRol(this.username).then(() => {
+        if (this.rol === 'profesor') {
+          this.getAsignaturasByUsuario();
+        } else if (this.rol === 'estudiante') {
+          this.cargarAsignaturasPorEstudiante();
+        }
+        this.isLoading = false; 
+      });
+    }
+  }
   // Obtener el rol del usuario
   async obtenerRol(username: string) {
     try {
@@ -83,8 +99,6 @@ export class InicioPage implements OnInit {
       if (rol) {
         this.rol = rol;
         this.setFondoClase();
-      } else {
-        console.error('Rol no encontrado para el usuario:', username);
       }
     } catch (error) {
       console.error('Error obteniendo el rol:', error);
@@ -102,23 +116,15 @@ export class InicioPage implements OnInit {
         break;
       case 'administrador':
         this.fondoClase = 'fondo fondo-administrador';
-        break;
-      default:
-        this.fondoClase = 'fondo';
     }
   }
 
   // Cargar asignaturas para estudiantes
   cargarAsignaturasPorEstudiante() {
     this.databaseService.getAsignaturasPorEstudiante(this.username).subscribe({
-      next: (data: Asignatura[]) => {
-        this.asignaturasE = data.map((asignatura: Asignatura) => ({
-          ...asignatura,
-          color_asignatura: `#${asignatura.color_asignatura}`,
-          color_seccion_asignatura: `#${asignatura.color_seccion_asignatura}`,
-        }));
-        console.log('Asignaturas (Estudiantes):', this.asignaturasE);
-        this.isLoading = false;
+      next: (data) => {
+        this.asignaturasE = data;
+        this.isLoading = false; // Termina la carga
       },
       error: (err) => {
         console.error('Error al cargar asignaturas:', err);
@@ -131,11 +137,13 @@ export class InicioPage implements OnInit {
   getAsignaturasByUsuario() {
     this.databaseService.getAsignaturasByUsuarioProfesor(this.username).subscribe(
       (data) => {
-        console.log('Asignaturas (Profesores):', data);
         this.asignaturasP = data;
+        console.log('Asignaturas (Profesores):', data);
+        this.isLoading = false; // Termina la carga
       },
       (error) => {
         console.error('Error al obtener asignaturas:', error);
+        this.isLoading = false;
       }
     );
   }
@@ -200,4 +208,5 @@ export class InicioPage implements OnInit {
       this.router.navigate(['/acceso-denegado']);
     }
   }
+  
 }
