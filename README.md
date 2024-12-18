@@ -5,7 +5,8 @@ Los usuarios por defecto son estudiante: jona contraseña: jona123
                              administrador: admin1 contraseña: admin123
 
 2. Maneja state y datos que cambian en el tiempo para la solución de los requerimientos del cliente.
-  Ocupo ngOnInit()
+  Ocupo ngOnInit() y ionViewWillEnter()
+![image](https://github.com/user-attachments/assets/cf12a545-3a54-4205-82af-67bd9f7a6e48)
 
 3- Integra librerías externas para simplificar el proceso de desarrollo, dando solución a los requerimientos del cliente.
 ![3](https://github.com/user-attachments/assets/0216250e-a774-4798-b6ec-e366ba829861)
