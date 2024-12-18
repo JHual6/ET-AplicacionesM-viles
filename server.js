@@ -120,6 +120,7 @@ app.get('/asignatura/:id_asignatura/:usuario_estudiante', (req, res) => {
   const query = `
 SELECT 
     estudiantes.usuario_estudiante,
+    estudiantes.id_estudiante,    
     asignatura.id_asignatura, 
     asignatura.nombre_asignatura, 
     asignatura.color_asignatura, 
@@ -670,5 +671,25 @@ app.get('/clases/codigoQR', (req, res) => {
     } else {
       res.status(200).json(results);
     }
+  });
+});
+// Ruta para actualizar asistencia
+app.put('/actualizar-asistencia', (req, res) => {
+  const { idClase, fechaAsistencia, idEstudiante } = req.body;
+
+  // Consulta SQL para actualizar la asistencia
+  const query = `
+    UPDATE asistencia 
+    SET asistencia = 1
+    WHERE id_clase = ? AND fecha_asistencia = ? AND id_estudiante = ?;
+  `;
+
+  // Ejecuta la consulta con los valores recibidos en el cuerpo de la solicitud
+  db.execute(query, [idClase, fechaAsistencia, idEstudiante], (err, results) => {
+    if (err) {
+      console.error('Error al actualizar la asistencia:', err);
+      return res.status(500).json({ message: 'Error al actualizar la asistencia' });
+    }
+    res.status(200).json({ message: 'Asistencia actualizada correctamente' });
   });
 });

@@ -178,11 +178,21 @@ export class DatabaseService {
   }
   getCodigoQRdeClase(idAsignatura: number, fechaClase: string): Observable<any> {
     const url = `${this.baseUrl}/clases/codigoQR`;
-    return this.http.get<any>(url, {
-      params: {
-        id_asignatura: idAsignatura.toString(),
-        fecha_clase: fechaClase,
-      },
-    });
+
+    // Configura los parámetros HTTP correctamente usando HttpParams
+    let params = new HttpParams()
+      .set('id_asignatura', idAsignatura.toString())
+      .set('fecha_clase', fechaClase);
+
+    return this.http.get<any>(url, { params });
+  }
+  actualizarAsistencia(idClase: number, fechaAsistencia: string, idEstudiante: number): Observable<any> {
+    const body = {
+      idClase,
+      fechaAsistencia,
+      idEstudiante,
+    };
+
+    return this.http.put<any>(this.baseUrl, body);
   }
 }
