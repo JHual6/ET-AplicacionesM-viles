@@ -3,6 +3,10 @@
       "target": "https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io/",
       "secure": false,
       "changeOrigin": true
-    }
+    },
+    "/api": {
+        "target": "http://localhost:3000",
+        "secure": false
+      }
   }
   

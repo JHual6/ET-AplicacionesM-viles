@@ -693,3 +693,30 @@ app.put('/actualizar-asistencia', (req, res) => {
     res.status(200).json({ message: 'Asistencia actualizada correctamente' });
   });
 });
+// Endpoint para insertar un estudiante
+app.post('/insertar-estudiante', (req, res) => {
+  const { usuario_estudiante, contrasena_estudiante } = req.body;
+  const query = 'INSERT INTO estudiantes(usuario_estudiante, contrasena_estudiante) VALUES (?, ?)';
+  db.query(query, [usuario_estudiante, contrasena_estudiante], (error, results) => {
+      if (error) {
+          console.error('Error al insertar estudiante:', error);
+          res.status(500).send('Error al insertar estudiante');
+      } else {
+          res.status(200).send({ message: 'Estudiante insertado correctamente', id: results.insertId });
+      }
+  });
+});
+
+// Endpoint para insertar un profesor
+app.post('/insertar-profesor', (req, res) => {
+  const { usuario_profesor, contrasena_profesor } = req.body;
+  const query = 'INSERT INTO profesores(usuario_profesor, contrasena_profesor) VALUES (?, ?)';
+  db.query(query, [usuario_profesor, contrasena_profesor], (error, results) => {
+      if (error) {
+          console.error('Error al insertar profesor:', error);
+          res.status(500).send('Error al insertar profesor');
+      } else {
+          res.status(200).send({ message: 'Profesor insertado correctamente', id: results.insertId });
+      }
+  });
+});

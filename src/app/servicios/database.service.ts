@@ -187,12 +187,32 @@ export class DatabaseService {
     return this.http.get<any>(url, { params });
   }
   actualizarAsistencia(idClase: number, fechaAsistencia: string, idEstudiante: number): Observable<any> {
+    const url = `${this.baseUrl}/actualizar-asistencia`; // Asegúrate de que baseUrl incluye la URL base del servidor
     const body = {
       idClase,
       fechaAsistencia,
       idEstudiante,
     };
-
-    return this.http.put<any>(this.baseUrl, body);
+  
+    return this.http.put<any>(url, body);
   }
+    // Método para insertar un estudiante
+    insertarEstudiante(usuario: string, contrasena: string): Observable<any> {
+      const url = `${this.baseUrl}/insertar-estudiante`;
+      const body = {
+        usuario_estudiante: usuario,
+        contrasena_estudiante: contrasena
+      };
+      return this.http.post(url, body);
+    }
+  
+    // Método para insertar un profesor
+    insertarProfesor(usuario: string, contrasena: string): Observable<any> {
+      const url = `${this.baseUrl}/insertar-profesor`;
+      const body = {
+        usuario_profesor: usuario,
+        contrasena_profesor: contrasena
+      };
+      return this.http.post(url, body);
+    }
 }

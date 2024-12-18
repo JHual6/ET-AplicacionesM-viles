@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../servicios/storage.service';
 import { AlertController } from '@ionic/angular';
+import { DatabaseService } from 'src/app/servicios/database.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -12,7 +13,8 @@ export class UsuariosPage implements OnInit {
 
   constructor(
     private storageService: StorageService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private databaseService: DatabaseService
   ) {}
   // Cuando se cargue la página se muestren todos los usuarios
   async ngOnInit() {
@@ -26,35 +28,61 @@ export class UsuariosPage implements OnInit {
         {
           name: 'nombre',
           type: 'text',
-          placeholder: 'Nombre del usuario'
+          placeholder: 'Nombre del usuario',
         },
         {
           name: 'contrasena',
           type: 'password',
-          placeholder: 'Contraseña'
+          placeholder: 'Contraseña',
         },
         {
           name: 'rol',
           type: 'text',
-          placeholder: 'Rol'
-        }
+          placeholder: 'Rol (profesor/estudiante)',
+        },
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Agregar',
           handler: async (data) => {
-            await this.storageService.addUsuario(data.nombre, data.contrasena, data.rol);
-            this.usuarios = await this.storageService.getUsuarios(); 
-          }
-        }
-      ]
+            if (data.rol.toLowerCase() === 'profesor') {
+              // Llamar a insertarProfesor
+              await this.databaseService.insertarProfesor(
+                data.nombre,
+                data.contrasena
+              );
+            } else if (data.rol.toLowerCase() === 'estudiante') {
+              // Llamar a insertarEstudiante
+              await this.databaseService.insertarEstudiante(
+                data.nombre,
+                data.contrasena
+              );
+            } else {
+              // Rol inválido
+              const invalidRoleAlert = await this.alertController.create({
+                header: 'Error',
+                message: 'Rol no válido. Use "profesor" o "estudiante".',
+                buttons: ['OK'],
+              });
+              await invalidRoleAlert.present();
+              return false; // Cancelar el cierre del modal
+            }
+
+            // Actualizar lista de usuarios después de agregar
+            this.usuarios = await this.storageService.getUsuarios();
+            return true; // Cerrar el modal después de una operación exitosa
+          },
+        },
+      ],
     });
     await alert.present();
   }
+
+  
   // Función para editar un usuario
   async editarUsuario(usuario: any) {
     const alert = await this.alertController.create({
