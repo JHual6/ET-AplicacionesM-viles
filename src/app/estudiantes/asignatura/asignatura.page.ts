@@ -42,9 +42,8 @@
     cargarDatosAsignatura(idAsignatura: number, idEstudiante: string) {
       this.databaseService.getAsignaturaDetalle(idAsignatura, idEstudiante).subscribe({
         next: (data: any[]) => {
-          // Verifica si hay datos en el array
           if (data.length > 0) {
-            const asignaturaData = data[0]; // Obtiene la primera asignatura del array
+            const asignaturaData = data[0]; 
     
             const totalAsistencias = asignaturaData.count_total_asistencias;
             const asistenciasPresentes = asignaturaData.count_asistencias;
@@ -80,7 +79,7 @@
 
     getTextColor(color: string | undefined): string {
       if (!color || color.length < 6) {
-        return '#000000'; // Color predeterminado
+        return '#000000'; 
       }
       const r = parseInt(color.slice(0, 2), 16);
       const g = parseInt(color.slice(2, 4), 16);
@@ -134,14 +133,11 @@
       console.log('Código QR obtenido de la clase:', codigoQrClase);
       console.log('Código QR escaneado:', this.qrCodeData);
     
-      // Intentamos extraer el texto del QR de manera segura
       let textoCodigoQrClase;
       try {
-        // Verificamos si es una URL válida
         const url = new URL(codigoQrClase);
         textoCodigoQrClase = url.searchParams.get('data');
       } catch (error) {
-        // Si no es una URL válida, usamos el código QR tal cual
         textoCodigoQrClase = codigoQrClase;
       }
     
@@ -161,19 +157,19 @@
     }
   
     async obtenerCodigoQrClase(): Promise<string | null> {
-      const fechaClase = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
+      const fechaClase = new Date().toISOString().split('T')[0]; 
     
       if (this.idAsignatura) {
         try {
           const url = `https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io/clases/codigoQR?id_asignatura=${this.idAsignatura}&fecha_clase=${fechaClase}`;
           
-          const response = await fetch(url); // Hacemos la solicitud GET a la API
-          const data = await response.json(); // Convertimos la respuesta a JSON
+          const response = await fetch(url); 
+          const data = await response.json(); 
     
           if (Array.isArray(data) && data.length > 0) {
             const qrData = data[0];
             this.id_clases = qrData?.id_clase || null;
-            return qrData?.codigoqr_clase || null; // Retornamos el código QR si existe, o null si no
+            return qrData?.codigoqr_clase || null; 
           } else {
             console.error('No se encontraron datos para el código QR.');
             return null;

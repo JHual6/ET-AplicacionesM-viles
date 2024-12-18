@@ -25,7 +25,7 @@ export class AutenticacionService {
     async iniciarSesion(nombreUsuario: string): Promise<boolean> {
         this.usuarioLogueado = true;
         this.rolUsuario = await this.storageService.getRol(nombreUsuario);
-        return this.rolUsuario !== null;  // Retorna true si el rol existe, false si no
+        return this.rolUsuario !== null;  
     }
 
 

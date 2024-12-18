@@ -61,16 +61,13 @@ export class AsignaturaPage implements OnInit {
               modalidad_asignatura: data.modalidad_asignatura,
             };
   
-            // Insertar asignatura en la base de datos
             this.databaseservice.insertAsignatura(nuevaAsignatura).subscribe(
               (response) => {
                 console.log(response.message);
-  
-                // Insertar clase vinculada
                 const nuevaClase = {
-                  id_asignatura: response.id_asignatura, // ID de la asignatura recién creada
-                  fecha_clase: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
-                  codigoqr_clase: 'Clase de inscripción', // Código QR predeterminado
+                  id_asignatura: response.id_asignatura, 
+                  fecha_clase: new Date().toISOString().split('T')[0], 
+                  codigoqr_clase: 'Clase de inscripción', 
                 };
   
                 this.databaseservice.insertarClase(nuevaClase).subscribe(
@@ -98,19 +95,14 @@ export class AsignaturaPage implements OnInit {
   async agregarEstudiantes(asignatura: any) {
     console.log('Editar asignatura:', asignatura);
   
-    // Obtener id_asignatura desde los datos de la asignatura
     const id_asignatura = asignatura.id_asignatura;
     console.log(`ID de la asignatura: ${id_asignatura}`);
   
-    // Llamar al servicio para obtener el id_clase
     this.databaseservice.getClaseInscripcion(id_asignatura).subscribe(
       async (response) => {
         if (response && response.length > 0) {
-          // Guardar el id_clase en una variable
           const id_clase = response[0].id_clase;
           console.log(`ID de la clase de inscripción obtenida: ${id_clase}`);
-  
-          // Mostrar alerta para ingresar el ID del estudiante
           const alert = await this.alertController.create({
             header: 'Ingresar ID del Estudiante',
             inputs: [
@@ -125,10 +117,8 @@ export class AsignaturaPage implements OnInit {
                 text: 'Guardar',
                 handler: (data) => {
                   if (data.id_estudiante) {
-                    // Obtener la fecha del sistema en formato 'YYYY-MM-DD'
                     const fecha_asistencia = new Date().toISOString().slice(0, 10);
   
-                    // Llamar al método para insertar la asistencia
                     this.databaseservice.insertAsistencia(id_clase, parseInt(data.id_estudiante), fecha_asistencia).subscribe(
                       (response) => {
                         console.log('Asistencia registrada exitosamente:', response.message);
@@ -165,7 +155,6 @@ export class AsignaturaPage implements OnInit {
   eliminarAsignatura(id_asignatura: number) {
     console.log(`ID recibido para eliminar: ${id_asignatura}`);
   
-    // Primero, elimina las clases asociadas
     this.databaseservice.deleteClasesAsociadas(id_asignatura).subscribe(
       () => {
         console.log('Clases asociadas eliminadas con éxito.');
@@ -175,11 +164,10 @@ export class AsignaturaPage implements OnInit {
       }
       
     );
-    // Luego, elimina la asignatura
     this.databaseservice.deleteAsignatura(id_asignatura).subscribe(
       (response) => {
         console.log(response.message);
-        this.cargarAsignaturas(); // Actualizar vista
+        this.cargarAsignaturas(); 
       },
       (error) => {
         console.error('Error al eliminar la asignatura', error);

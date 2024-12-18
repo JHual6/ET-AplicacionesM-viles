@@ -40,7 +40,6 @@ export class IngresoPage implements OnInit {
         this.errorMessage = "Contraseña incorrecta";
     }
   }
-  // Función para crear los usuarios por defecto (SOLO PARA EJEMPLOS DE USO, MENOS EL ADMIN)
   async ngOnInit() {
     await this.storageService.init();
 

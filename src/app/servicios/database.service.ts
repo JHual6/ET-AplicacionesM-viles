@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class DatabaseService {
-  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io'; // Cambia esta URL si es necesario
+  private baseUrl = 'https://app-8d6ef5f9-d10f-4820-80a4-175e4ea1fb5c.cleverapps.io';
 
   constructor(private http: HttpClient) {}
 
@@ -187,7 +187,7 @@ export class DatabaseService {
     return this.http.get<any>(url, { params });
   }
   actualizarAsistencia(idClase: number, fechaAsistencia: string, idEstudiante: number): Observable<any> {
-    const url = `${this.baseUrl}/actualizar-asistencia`; // Asegúrate de que baseUrl incluye la URL base del servidor
+    const url = `${this.baseUrl}/actualizar-asistencia`; 
     const body = {
       idClase,
       fechaAsistencia,
@@ -198,7 +198,7 @@ export class DatabaseService {
   }
   // Método para insertar un estudiante
   insertarEstudiante(usuario: string, contrasena: string): Observable<any> {
-    const url = `${this.baseUrl}/insertar-estudiante`; // Asegúrate de que esta URL sea correcta
+    const url = `${this.baseUrl}/insertar-estudiante`; 
     const body = {
       usuario_estudiante: usuario,
       contrasena_estudiante: contrasena
@@ -208,7 +208,7 @@ export class DatabaseService {
 
   // Método para insertar un profesor
   insertarProfesor(usuario: string, contrasena: string): Observable<any> {
-    const url = `${this.baseUrl}/insertar-profesor`; // Asegúrate de que esta URL sea correcta
+    const url = `${this.baseUrl}/insertar-profesor`; 
     const body = {
       usuario_profesor: usuario,
       contrasena_profesor: contrasena

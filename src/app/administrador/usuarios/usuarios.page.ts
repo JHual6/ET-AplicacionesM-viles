@@ -50,7 +50,6 @@ export class UsuariosPage implements OnInit {
           text: 'Agregar',
           handler: async (data) => {
             try {
-              // Validación de campos vacíos
               if (!data.nombre || !data.contrasena || !data.rol) {
                 const emptyFieldAlert = await this.alertController.create({
                   header: 'Error',
@@ -58,10 +57,9 @@ export class UsuariosPage implements OnInit {
                   buttons: ['OK'],
                 });
                 await emptyFieldAlert.present();
-                return false; // Cancela el cierre del modal
+                return false;
               }
   
-              // Validar y agregar según el rol
               if (data.rol.toLowerCase() === 'profesor') {
                 this.databaseService.insertarProfesor(data.nombre, data.contrasena).subscribe(
                   async (response) => {
@@ -117,10 +115,10 @@ export class UsuariosPage implements OnInit {
                   buttons: ['OK'],
                 });
                 await invalidRoleAlert.present();
-                return false; // Cancela el cierre del modal
+                return false; 
               }
   
-              return true; // Cierra el modal
+              return true; 
             } catch (error) {
               console.error('Error al agregar usuario:', error);
   
@@ -130,7 +128,7 @@ export class UsuariosPage implements OnInit {
                 buttons: ['OK'],
               });
               await errorAlert.present();
-              return false; // Cancela el cierre del modal
+              return false; 
             }
           },
         },

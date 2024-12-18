@@ -57,7 +57,7 @@ db.getConnection((err, connection) => {
 app.get('/asignaturas', (req, res) => {
   db.query('SELECT * FROM asignatura', (err, results) => {
     if (err) {
-      console.error('Error al obtener asignaturas:', err); // Log de error para depuración
+      console.error('Error al obtener asignaturas:', err); 
       return res.status(500).send({ error: 'Error al obtener asignaturas' });
     }
     res.json(results);
@@ -353,7 +353,7 @@ app.get('/asignatura/:id', (req, res) => {
         return res.status(404).json({ error: 'No se encontró asignatura con el ID proporcionado' });
       }
   
-      res.json(results[0]); // Devuelve la información de la asignatura
+      res.json(results[0]); 
   });
 }); 
 // Insertar nueva clase
@@ -402,7 +402,7 @@ app.get('/asignaturas/:id_asignatura/estudiantes', (req, res) => {
     }
   });
 });
-  // Ruta para insertar datos en la tabla 'asistencia'
+// Ruta para insertar datos en la tabla 'asistencia'
 app.post('/insert/asistencia', (req, res) => {
   const { id_clase, id_estudiante, asistencia, fecha_asistencia } = req.body;
 
@@ -470,8 +470,6 @@ app.delete('/deleteAsignatura/:id_asignatura', (req, res) => {
 // Ruta para eliminar las clases asociadas con una asignatura
 app.delete('/deleteClases/:id_asignatura', (req, res) => {
   const idAsignatura = req.params.id_asignatura;
-
-  // Eliminar las clases asociadas con la asignatura
   const deleteClasesQuery = `DELETE FROM clases WHERE id_asignatura = ?`;
 
   db.query(deleteClasesQuery, [idAsignatura], (err, result) => {
@@ -495,7 +493,7 @@ app.get('/getClaseInscripcion/:id_asignatura', (req, res) => {
           res.status(500).send({ message: 'Error al obtener la clase', error: err });
       } else {
           if (result.length > 0) {
-              res.status(200).send(result); // Enviar el resultado
+              res.status(200).send(result); 
           } else {
               res.status(404).send({ message: 'No se encontró ninguna clase con el código QR "Clase de inscripción"' });
           }
@@ -527,15 +525,10 @@ app.post('/insertAsistencia', (req, res) => {
 app.get('/clases/fecha/:fecha', (req, res) => {
   const fechaClase = req.params.fecha;
 
-  // Verificar el formato de la fecha usando moment.js
   if (!moment(fechaClase, 'YYYY-MM-DD', true).isValid()) {
     return res.status(400).json({ error: 'Formato de fecha inválido. Use YYYY-MM-DD.' });
   }
-
-  // Si el formato es válido, convertir la fecha a un objeto Date usando moment.js
   const fechaObj = moment(fechaClase).toDate();
-
-  // Consulta para seleccionar solo id_clase, id_asignatura y fecha_clase
   const query = 'SELECT id_clase, id_asignatura, fecha_clase, codigoqr_clase FROM clases WHERE fecha_clase = ?';
 
   db.query(query, [fechaObj], (err, results) => {
@@ -549,7 +542,7 @@ app.get('/clases/fecha/:fecha', (req, res) => {
     }
 
     console.log('Resultados obtenidos:', results);
-    res.json(results); // Enviar solo las columnas seleccionadas
+    res.json(results); 
   });
 });
 // Route para insertar asistencia

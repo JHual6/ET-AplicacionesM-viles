@@ -10,11 +10,11 @@
       <h1 [ngStyle]="{
         'background-image': 'linear-gradient(to right, #' + asignatura.color_asignatura + ', #' + asignatura.color_seccion_asignatura + ')',
         color: getTextColor(asignatura.color_asignatura)
-      }">{{ asignatura.nombre_asignatura }}</h1> <!-- Nombre de la asignatura cargado dinámicamente -->
+      }">{{ asignatura.nombre_asignatura }}</h1> 
       <p>Asistencia del curso:</p>
       <div class="spinner-wrapper">
         <mat-progress-spinner class="custom-spinner" mode="determinate" [value]="porcentajeAsistencia"></mat-progress-spinner>
-        <div class="spinner-text">{{ porcentajeAsistencia.toFixed(2) }}%</div> <!-- Porcentaje de asistencia calculado -->
+        <div class="spinner-text">{{ porcentajeAsistencia.toFixed(2) }}%</div> 
       </div>    
     </div>
   </div>

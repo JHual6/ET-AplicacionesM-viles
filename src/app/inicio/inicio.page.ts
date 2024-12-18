@@ -32,15 +32,15 @@ type Asignatura = {
 })
 export class InicioPage implements OnInit {
 
-  asignaturasE: Asignatura[] = []; // Asignaturas de estudiantes
+  asignaturasE: Asignatura[] = [];
   username: string = "";
   rol: string = "";
   fondoClase: string = 'fondo';
-  asignaturaE: any = null; // Asignatura seleccionada por estudiantes
-  isLoading: boolean = true; // Estado de carga
+  asignaturaE: any = null; 
+  isLoading: boolean = true; 
   loadingMessage: string = 'Cargando inicio...'
-  asignaturasP: any[] = []; // Asignaturas de profesores
-  asignaturaP: any = null;  // Asignatura seleccionada por profesores
+  asignaturasP: any[] = []; 
+  asignaturaP: any = null;  
 
   constructor(
     private route: ActivatedRoute,
@@ -124,7 +124,7 @@ export class InicioPage implements OnInit {
     this.databaseService.getAsignaturasPorEstudiante(this.username).subscribe({
       next: (data) => {
         this.asignaturasE = data;
-        this.isLoading = false; // Termina la carga
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error al cargar asignaturas:', err);
@@ -139,7 +139,7 @@ export class InicioPage implements OnInit {
       (data) => {
         this.asignaturasP = data;
         console.log('Asignaturas (Profesores):', data);
-        this.isLoading = false; // Termina la carga
+        this.isLoading = false; 
       },
       (error) => {
         console.error('Error al obtener asignaturas:', error);

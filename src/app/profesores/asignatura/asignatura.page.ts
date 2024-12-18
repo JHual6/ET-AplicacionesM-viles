@@ -13,22 +13,22 @@ export class AsignaturaPage implements OnInit {
   idAsignatura: string | null = null;
   idProfesor: string | null = null;
   asignatura: any;
-  porcentajeAsistencia: number = 0; // Variable para almacenar el porcentaje de asistencia
-  fechaClase: string = ''; // Fecha seleccionada en el input
-  codigoQrClase: string = ''; // Código QR generado
-  estudiantes: any[] = []; // Arreglo para almacenar los estudiantes de la asignatura
+  porcentajeAsistencia: number = 0; 
+  fechaClase: string = '';
+  codigoQrClase: string = ''; 
+  estudiantes: any[] = []; 
 
   constructor(private apiService: ApiService, private route: ActivatedRoute, private databaseservice: DatabaseService) {}
 
   ngOnInit() {
-    this.idAsignatura = this.route.snapshot.paramMap.get('id'); // Obtiene el ID de la asignatura desde la ruta
-    this.idProfesor = this.route.snapshot.queryParamMap.get('idProfesor'); // Obtiene el ID del profesor desde los parámetros de la ruta
+    this.idAsignatura = this.route.snapshot.paramMap.get('id'); 
+    this.idProfesor = this.route.snapshot.queryParamMap.get('idProfesor'); 
     console.log('ID Asignatura:', this.idAsignatura);
     console.log('ID Profesor:', this.idProfesor);
 
     if (this.idAsignatura && this.idProfesor) {
-      this.cargarDatosAsignatura(this.idAsignatura, this.idProfesor); // Llama a la función para cargar los datos de la asignatura
-      this.obtenerEstudiantesAsignatura(); // Obtiene los estudiantes de la asignatura
+      this.cargarDatosAsignatura(this.idAsignatura, this.idProfesor); 
+      this.obtenerEstudiantesAsignatura();
     } else {
       console.error('No se proporcionó el ID de la asignatura o del profesor.');
     }
@@ -38,15 +38,9 @@ export class AsignaturaPage implements OnInit {
   cargarDatosAsignatura(idAsignatura: string, idProfesor: string) {
     this.databaseservice.getAsignaturaClasesAsistencia(idProfesor, idAsignatura).subscribe({
       next: (asistenciaData: any[]) => {
-        // Filtramos las clases donde la asistencia es 1 (presente)
         const totalAsistencias = asistenciaData.length;
         const asistenciasPresentes = asistenciaData.filter(a => a.asistencia === 1).length;
-
-        // Calculamos el porcentaje de asistencia
         this.porcentajeAsistencia = (asistenciasPresentes / totalAsistencias) * 100;
-        
-        // Ahora vamos a buscar los valores del nombre, color y color de la sección
-        // (Este ejemplo asume que los valores provienen de la respuesta de la consulta)
         this.asignatura = {
           nombre_asignatura: asistenciaData[0].nombre_asignatura || 'Asignatura Desconocida', // Valor del nombre de la asignatura
           color_asignatura: asistenciaData[0].color_asignatura || '#FFFFFF', // Color de la asignatura (default blanco)
@@ -54,12 +48,10 @@ export class AsignaturaPage implements OnInit {
           seccion_asignatura: this.porcentajeAsistencia.toFixed(2), // Asistencia en porcentaje
         };
 
-        // Guarda estos valores en las variables respectivas
         const nombreAsignatura = this.asignatura.nombre_asignatura;
         const colorAsignatura = this.asignatura.color_asignatura;
         const colorSeccionAsignatura = this.asignatura.color_seccion_asignatura;
 
-        // Imprime los valores en la consola para verificar
         console.log('Nombre Asignatura:', nombreAsignatura);
         console.log('Color Asignatura:', colorAsignatura);
         console.log('Color Sección Asignatura:', colorSeccionAsignatura);
@@ -78,11 +70,7 @@ export class AsignaturaPage implements OnInit {
       alert('Por favor, ingresa una fecha válida.');
       return;
     }
-
-    // Genera el código QR basado en la fecha
     this.codigoQrClase = await this.apiService.generateQrCode(this.fechaClase);
-
-    // Inserta la clase en el servidor
     this.insertarClase();
   }
 
@@ -96,7 +84,6 @@ export class AsignaturaPage implements OnInit {
     this.databaseservice.insertarClase(data).subscribe(
       (response: any) => {
         console.log(response);
-        // Insertar asistencia automática después de crear la clase
         this.insertarAsistenciaAutomatica(response.id);
       },
       (error) => {
@@ -127,15 +114,10 @@ export class AsignaturaPage implements OnInit {
   }
 
   getTextColor(color: string): string {
-    // Convertimos el color hexadecimal en valores RGB
     const r = parseInt(color.slice(0, 2), 16);
     const g = parseInt(color.slice(2, 4), 16);
     const b = parseInt(color.slice(4, 6), 16);
-
-    // Calculamos el brillo del color
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-    // Si el brillo es bajo, devolvemos blanco; de lo contrario, negro
     return brightness < 128 ? '#ffffff' : '#000000';
   }
 
